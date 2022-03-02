@@ -13,7 +13,10 @@ end
 function init()
 	-- settings
 	dead_h = 130
-	gravity=0.2	
+	gravity=0.2
+	-- window limits
+	window_l = 0
+	window_r = 128
 	-- title screen
 	blink_col1 = 8
 	blink_col2 = 14
@@ -38,6 +41,7 @@ function init()
 		fric=0.5,
 		dash_time=0,
 		dash_time_max = 6,
+		atk=3,
 		-- stat
 		running=false,
 		falling=false,
@@ -53,22 +57,28 @@ function init()
 	}
 	-- enemies
 	enemies = {}
+	create_enemey_1()
+end
+
+function create_enemey_1()
 	local enemy = {
 		sp=64,
+		sp_begin=64,
+		sp_end=65,
 		spw=1,				-- sprite width
 		w=8,
 		h=8,
 		x=70,
-		y=10,
-		dx=0,
-		dy=0,
-		max_dx=2,
-		max_dy=3,
-		acc_walk=0.8,
-		acc_jump=3,
-		fric=0.5,
+		y=16,
+		dx=0.5,
 		flip=false,
 		dead=false,
+		hp=6,
+		-- anim
+		anim=0,
+		-- function
+		update=update_enemy_1,
+		animate=animate_enemy_1,
 	}
 	add(enemies, enemy)
 end
@@ -95,7 +105,7 @@ function draw_title()
 	cls(1)
 	print("daslash", 32, 8, 12)
 	spr(192, 48, 25, 4, 4)
-	print("dash from behind, and slash!", 8, 62, 6)
+	print("dash from behind, and slash!", 8, 62, 3)
 	print("press ❎ to start", 32, 82, blink_col)
 	print("🅾️ hide", 16, 96, 6)
 	print("❎ dash and slash", 16,104,6)
@@ -106,7 +116,9 @@ end
 -->8
 function update_gaming()
 	update_player()
+	update_enemies()
 	animate_player()
+	animate_enemies()
 end
 
 function update_player()
@@ -219,7 +231,7 @@ function update_player()
 		and min(player.x, player.x + player.dx) < enemy.x
 		and max(player.x, player.x + player.dx) > enemy.x 
 		and player.flip == enemy.flip then
-			enemy.dead = true
+			enemy.hp -= player.atk
 		end
 	end
 
@@ -228,12 +240,33 @@ function update_player()
 	player.y += player.dy
 	player.y = flr(player.y + 0.9)
 
-	-- limit window
+	-- limit player to window
 	if player.y > dead_h then
 		_update = update_gameover
 		_draw = draw_gameover
 	end
+	if player.x < window_l then
+		player.x = window_l
+	elseif player.x > window_r - player.w then
+		player.x = window_r - player.w
+	end
+end
 
+function update_enemies()
+	for enemy in all(enemies) do
+		enemy.update(enemy)
+	end
+end
+
+function update_enemy_1(self)
+	-- flip
+	local collide = collide_ground(self, 1)
+	if not collide then
+		self.dx *= -1
+		self.flip = not self.flip
+	end
+	-- apply move
+	self.x += self.dx
 end
 
 function collide_wall(obj, dir)
@@ -359,18 +392,40 @@ function animate_player()
 	end
 end
 
+function animate_enemies()
+	for enemy in all(enemies) do
+		enemy.animate(enemy)
+	end
+end
+
+function animate_enemy_1(self)
+	if time() - self.anim > 0.1 then
+		self.anim = time()
+		self.sp += 1
+		if self.sp > self.sp_end then
+			self.sp = self.sp_begin
+		end
+	end
+end
+
 function draw_gaming()
 	cls(1)
 	draw_map()
+	-- TODO draw player hp
+	if player.hide then
+		draw_player()
+	end
 	draw_enemies()
-	draw_player()
+	if not player.hide then
+		draw_player()
+	end
 	
 	-- debug print
 	-- print("player.dx:"..player.dx, 3)
 	-- print("player.dy:"..player.dy, 3)
-	print("player.x:"..player.x, 3)
-	print("player.y:"..player.y, 3)
-	print("player.chk_ladder:"..player.chk_ladder, 3)
+	-- print("player.x:"..player.x, 3)
+	-- print("player.y:"..player.y, 3)
+	-- print("player.chk_ladder:"..player.chk_ladder, 3)
 end
 
 function draw_map()
@@ -378,18 +433,15 @@ function draw_map()
 end
 
 function draw_player()
-	-- circfill(player.x, player.y, 2, 2)
 	spr(player.sp, player.x, player.y, player.spw, 1, player.flip)
 end
 
 function draw_enemies()
 	for enemy in all(enemies) do
 		-- local c = 11
-		if not enemy.dead then
-			-- c = 3
+		if enemy.hp > 0 then
 			spr(enemy.sp, enemy.x, enemy.y, 1, 1, enemy.flip)
 		end
-		-- circfill(enemy.x, enemy.y, 3, c)
 	end
 end
 
