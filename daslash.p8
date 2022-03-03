@@ -42,15 +42,17 @@ function init()
 		dash_time=0,
 		dash_time_max = 6,
 		atk=3,
+		hp=3,
 		-- stat
 		running=false,
 		falling=false,
 		landing=false,
+		underatk=false,			-- under attack flg
 		chk_ladder="none",
 		flip=false,
 		dash_time=0,
 		dash_time_max = 6,
-		hide=false,
+		hiding=false,
 		ladder="none",
 		-- anim
 		anim=0,
@@ -74,6 +76,7 @@ function create_enemey_1()
 		flip=false,
 		dead=false,
 		hp=6,
+		underatk=false,		-- under attack flag
 		-- anim
 		anim=0,
 		-- function
@@ -107,7 +110,7 @@ function draw_title()
 	spr(192, 48, 25, 4, 4)
 	print("dash from behind, and slash!", 8, 62, 3)
 	print("press ❎ to start", 32, 82, blink_col)
-	print("🅾️ hide", 16, 96, 6)
+	print("🅾️ hiding", 16, 96, 6)
 	print("❎ dash and slash", 16,104,6)
 	print("by kaytruck", 80, 120, 6)
 	
@@ -134,9 +137,9 @@ function update_player()
 	player.ladder = "none"
 	--control
 	if btn(🅾️) then
-		player.hide = true
+		player.hiding = true
 	else
-		player.hide = false
+		player.hiding = false
 		if btn(⬅️) then
 			player.flip = true
 			player.running = true
@@ -225,30 +228,72 @@ function update_player()
 		player.dx = 0
 	end
 
-	-- dash through enemy
-	for enemy in all(enemies) do
-		if player.dash_time > 0
-		and min(player.x, player.x + player.dx) < enemy.x
-		and max(player.x, player.x + player.dx) > enemy.x 
-		and player.flip == enemy.flip then
-			enemy.hp -= player.atk
-		end
-	end
+	-- collide enemies
+	engage(player, enemies)
 
 	-- apply move
 	player.x += player.dx
 	player.y += player.dy
 	player.y = flr(player.y + 0.9)
 
-	-- limit player to window
-	if player.y > dead_h then
+	-- player die
+	if player.y > dead_h 
+	or player.hp <= 0 then
 		_update = update_gameover
 		_draw = draw_gameover
 	end
+	-- limit player to window
 	if player.x < window_l then
 		player.x = window_l
 	elseif player.x > window_r - player.w then
 		player.x = window_r - player.w
+	end
+end
+
+function engage(player, enemies)
+	local deads = {}
+	for enemy in all(enemies) do
+		-- if not collide on y
+		if not (max(player.y, enemy.y) <= min(player.y + player.h - 1, enemy.y + enemy.h - 1))
+		and not (min(player.y + player.h - 1, enemy.y + enemy.h - 1) >= max(player.y, enemy.y)) then
+			goto nextenemy
+		end
+		-- if not collide on x
+		-- TODO should compare to center and center ?
+		if not (max(player.x, enemy.x) <= min(player.x + player.w - 1, enemy.x + enemy.w - 1))
+		and not (min(player.x + player.w - 1, enemy.x + enemy.w - 1) >= max(player.x, enemy.x)) then
+			player.underatk = false
+			enemy.underatk = false
+			goto nextenemy
+		end
+		-- if dashing
+		if player.dash_time > 0 then
+			--  if same direction
+			if player.flip == enemy.flip
+			and not enemy.underatk then
+				-- if dash through
+					-- if min(player.x, player.x + player.dx) < enemy.x
+					-- and max(player.x, player.x + player.dx) > enemy.x then
+					-- 	enemy.hp -= player.atk
+					-- end
+				enemy.hp -= player.atk
+				enemy.underatk = true
+			end
+		else
+			-- player damage
+			if not player.hiding
+			and not player.underatk then
+				player.hp -= 1
+				player.underatk = true
+			end
+		end
+		if enemy.hp <= 0 then
+			add(deads, enemy)
+		end
+		::nextenemy::
+	end
+	for dead in all(deads) do
+		del(enemies, dead)
 	end
 end
 
@@ -361,7 +406,7 @@ end
 
 function animate_player()
 	player.spw = 1
-	if player.hide then
+	if player.hiding then
 		player.sp = 17
 	elseif player.dash_time > 0 then
 		player.sp = 33
@@ -411,12 +456,15 @@ end
 function draw_gaming()
 	cls(1)
 	draw_map()
-	-- TODO draw player hp
-	if player.hide then
+	-- draw player hp
+	for i=1,player.hp do
+		circfill(4 + 8 * i, 5, 2, 14)
+	end
+	if player.hiding then
 		draw_player()
 	end
 	draw_enemies()
-	if not player.hide then
+	if not player.hiding then
 		draw_player()
 	end
 	
@@ -425,7 +473,7 @@ function draw_gaming()
 	-- print("player.dy:"..player.dy, 3)
 	-- print("player.x:"..player.x, 3)
 	-- print("player.y:"..player.y, 3)
-	-- print("player.chk_ladder:"..player.chk_ladder, 3)
+	print("player.chk_ladder:"..player.chk_ladder, 3)
 end
 
 function draw_map()
