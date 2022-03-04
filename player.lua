@@ -34,13 +34,10 @@ function init_player()
 end
 
 function update_player(p, enemies)
-	-- p.dx *= p.fric
     p.dx = p.dx * p.fric
 	if p.dash_time > 0 then
-		-- p.dash_time -= 1
         p.dash_time = p.dash_time - 1
 	else
-		-- p.dy += gravity
         p.dy = p.dy + gravity
 	end
 	if abs(p.dx) < 0.5 then
@@ -55,13 +52,11 @@ function update_player(p, enemies)
 		if btn(0) then
 			p.flip = true
 			p.running = true
-			-- p.dx -= p.acc_walk
             p.dx = p.dx - p.acc_walk
 		end
 		if btn(1) then
 			p.flip = false
 			p.running = true
-			-- p.dx += p.acc_walk
             p.dx = p.dx + p.acc_walk
 		end
 		if btn(2) then
@@ -79,10 +74,8 @@ function update_player(p, enemies)
 	-- dash
 	if p.dash_time > 0 then
 		if p.flip then
-			-- p.dx -= p.acc_dash
             p.dx = p.dx - p.acc_dash
 		else
-			-- p.dx += p.acc_dash
             p.dx = p.dx + p.acc_dash
 		end
 	elseif abs(p.dx) > p.max_dx then
@@ -138,7 +131,6 @@ function update_player(p, enemies)
 	if p.dx > 0
 	and collide_wall(p, "right") then
 		p.dx = 0
-		-- p.x -= (p.x + p.w) % 8
         p.x = p.x - (p.x + p.w) % 8
 	elseif p.dx < 0
 	and collide_wall(p, "left") then
@@ -149,9 +141,7 @@ function update_player(p, enemies)
 	engage(p, enemies)
 
 	-- apply move
-	-- p.x += p.dx
     p.x = p.x + p.dx
-	-- p.y += p.dy
     p.y = p.y + p.dy
 	p.y = flr(p.y + 0.9)
 
@@ -195,15 +185,13 @@ function engage(p, enemies)
 					-- and max(p.x, p.x + p.dx) > enemy.x then
 					-- 	enemy.hp -= p.atk
 					-- end
-				-- enemy.hp -= p.atk
                 enemy.hp = enemy.hp - p.atk
 				enemy.underatk = true
 			end
 		else
-			-- p damage
+			-- player damage
 			if not p.hiding
 			and not p.underatk then
-				-- p.hp -= 1
                 p.hp = p.hp - 1
 				p.underatk = true
 			end

@@ -61,7 +61,6 @@ end
 
 function draw_enemies(enemies)
 	for enemy in all(enemies) do
-		-- local c = 11
 		if enemy.hp > 0 then
 			spr(enemy.sp, enemy.x, enemy.y, 1, 1, enemy.flip)
 		end

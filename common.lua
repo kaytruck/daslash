@@ -4,6 +4,7 @@ function collide_wall(obj, dir)
 	local x2 = 0
 	local y2 = 0
 	local flg = 0xF
+
 	if dir == "right" then
 		x1 = obj.x + obj.w
 		y1 = obj.y
@@ -17,10 +18,6 @@ function collide_wall(obj, dir)
 	end
 
 	-- pixel to tile
-	-- x1 /= 8
-	-- y1 /= 8
-	-- x2 /= 8
-	-- y2 /= 8
     x1 = x1 / 8
     y1 = y1 / 8
     x2 = x2 / 8
@@ -76,10 +73,6 @@ function chk_ladder(obj)
 
 	local flg = 0x14
 
-	-- x1 /= 8
-	-- y1 /= 8
-	-- x2 /= 8
-	-- y2 /= 8
 	x1 = x1 / 8
 	y1 = y1 / 8
 	x2 = x2 / 8
