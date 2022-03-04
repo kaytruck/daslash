@@ -1,0 +1,258 @@
+function init_player()
+	return {
+		sp=1,				-- sprite
+		spw=1,				-- sprite width
+		w=8,
+		h=8,
+		x=40,
+		y=30,
+		dx=0,
+		dy=0,
+		max_dx=2,
+		max_dy=3,
+		max_dy_ladder=1,
+		acc_walk=0.8,
+		acc_dash=2,
+		acc_jump=3,
+		fric=0.5,
+		dash_time=0,
+		dash_time_max = 6,
+		atk=3,
+		hp=3,
+		-- stat
+		running=false,
+		falling=false,
+		landing=false,
+		underatk=false,			-- under attack flg
+		chk_ladder="none",
+		flip=false,
+		hiding=false,
+		ladder="none",
+		-- anim
+		anim=0,
+	}
+end
+
+function update_player(p, enemies)
+	-- p.dx *= p.fric
+    p.dx = p.dx * p.fric
+	if p.dash_time > 0 then
+		-- p.dash_time -= 1
+        p.dash_time = p.dash_time - 1
+	else
+		-- p.dy += gravity
+        p.dy = p.dy + gravity
+	end
+	if abs(p.dx) < 0.5 then
+		p.running = false
+	end	
+	p.ladder = "none"
+	--control
+	if btn(4) then
+		p.hiding = true
+	else
+		p.hiding = false
+		if btn(0) then
+			p.flip = true
+			p.running = true
+			-- p.dx -= p.acc_walk
+            p.dx = p.dx - p.acc_walk
+		end
+		if btn(1) then
+			p.flip = false
+			p.running = true
+			-- p.dx += p.acc_walk
+            p.dx = p.dx + p.acc_walk
+		end
+		if btn(2) then
+			p.ladder = "up"
+		end
+		if btn(3) then
+			p.ladder = "down"
+		end
+		if btnp(5)
+		and p.dash_time == 0 then
+			p.dash_time = p.dash_time_max
+		end
+	end
+
+	-- dash
+	if p.dash_time > 0 then
+		if p.flip then
+			-- p.dx -= p.acc_dash
+            p.dx = p.dx - p.acc_dash
+		else
+			-- p.dx += p.acc_dash
+            p.dx = p.dx + p.acc_dash
+		end
+	elseif abs(p.dx) > p.max_dx then
+		-- limit speed x-axis
+		if p.dx > 0 then
+			p.dx = p.max_dx
+		else
+			p.dx = -p.max_dx
+		end
+	end
+
+	-- limit speed y-axis
+	p.dy = mid(-p.max_dy, p.dy, p.max_dy)
+
+	-- falling
+	if p.dy > 0 and p.chk_ladder == "none" then
+		p.falling = true
+		p.landing = false
+	end
+
+	-- collide ground
+	for offset = 1, flr(p.dy + 0.9) do
+		local collide = collide_ground(p, offset)
+		if collide then
+			p.falling = false
+			p.landing = true
+			if p.dy > 0 then
+				p.dy = 0
+			end
+			break
+		end
+	end
+	-- ladder
+	p.chk_ladder = chk_ladder(p)
+	if p.chk_ladder == "on" then
+		if p.ladder == "down" then
+			p.dy = 1
+		end
+	elseif p.chk_ladder == "in" then
+		if p.ladder == "up" then
+			p.dy = -1
+		end
+		if p.ladder == "down" then
+			p.dy = 1
+		end
+	elseif p.chk_ladder == "bottom" then
+		if p.ladder == "up" then
+			p.dy = -1
+		end
+	end
+
+	-- collide wall
+	if p.dx > 0
+	and collide_wall(p, "right") then
+		p.dx = 0
+		-- p.x -= (p.x + p.w) % 8
+        p.x = p.x - (p.x + p.w) % 8
+	elseif p.dx < 0
+	and collide_wall(p, "left") then
+		p.dx = 0
+	end
+
+	-- collide enemies
+	engage(p, enemies)
+
+	-- apply move
+	-- p.x += p.dx
+    p.x = p.x + p.dx
+	-- p.y += p.dy
+    p.y = p.y + p.dy
+	p.y = flr(p.y + 0.9)
+
+	-- player die
+	if p.y > dead_h 
+	or p.hp <= 0 then
+		_update = update_gameover
+		_draw = draw_gameover
+	end
+	-- limit player to window
+	if p.x < window_l then
+		p.x = window_l
+	elseif p.x > window_r - p.w then
+		p.x = window_r - p.w
+	end
+end
+
+function engage(p, enemies)
+	local deads = {}
+	for enemy in all(enemies) do
+		-- if not collide on y
+		if not (max(p.y, enemy.y) <= min(p.y + p.h - 1, enemy.y + enemy.h - 1))
+		and not (min(p.y + p.h - 1, enemy.y + enemy.h - 1) >= max(p.y, enemy.y)) then
+			goto nextenemy
+		end
+		-- if not collide on x
+		-- TODO should compare to center and center ?
+		if not (max(p.x, enemy.x) <= min(p.x + p.w - 1, enemy.x + enemy.w - 1))
+		and not (min(p.x + p.w - 1, enemy.x + enemy.w - 1) >= max(p.x, enemy.x)) then
+			p.underatk = false
+			enemy.underatk = false
+			goto nextenemy
+		end
+		-- if dashing
+		if p.dash_time > 0 then
+			--  if same direction
+			if p.flip == enemy.flip
+			and not enemy.underatk then
+				-- if dash through
+					-- if min(p.x, p.x + p.dx) < enemy.x
+					-- and max(p.x, p.x + p.dx) > enemy.x then
+					-- 	enemy.hp -= p.atk
+					-- end
+				-- enemy.hp -= p.atk
+                enemy.hp = enemy.hp - p.atk
+				enemy.underatk = true
+			end
+		else
+			-- p damage
+			if not p.hiding
+			and not p.underatk then
+				-- p.hp -= 1
+                p.hp = p.hp - 1
+				p.underatk = true
+			end
+		end
+		if enemy.hp <= 0 then
+			add(deads, enemy)
+		end
+		::nextenemy::
+	end
+	for dead in all(deads) do
+		del(enemies, dead)
+	end
+end
+
+function animate_player(player)
+	player.spw = 1
+	if player.hiding then
+		player.sp = 17
+	elseif player.dash_time > 0 then
+		player.sp = 33
+		player.spw = 2
+	elseif player.falling then
+		player.sp = 7
+	elseif player.running then
+		if time() - player.anim > 0.1 then
+			player.anim = time()
+			-- player.sp += 1
+            player.sp = player.sp + 1
+			if player.sp > 6 then
+				player.sp = 2
+			end
+		end
+	elseif (player.chk_ladder == "in"
+	or player.chk_ladder == "bottom")
+	and player.dy ~= 0 then
+		if time() - player.anim > 0.1 then
+			player.anim = time()
+			if player.sp == 8 then
+				player.sp = 9
+			else
+				player.sp = 8
+			end
+		end
+	else
+		player.sp = 1
+	end
+end
+
+function draw_player(player)
+	spr(player.sp, player.x, player.y, player.spw, 1, player.flip)
+end
+
