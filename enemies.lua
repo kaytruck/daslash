@@ -34,8 +34,14 @@ end
 
 function update_enemy_1(self)
 	-- flip
-	local collide = collide_ground(self, 1)
-	if not collide then
+	local collide_ground = collide_ground(self, 1)
+	local dir = "right"
+	if self.vx < 0 then
+		dir = "left"
+	end
+	local collide_wall = collide_wall(self, dir)
+	if not collide_ground 
+	or collide_wall then
 		self.vx = self.vx * -1
 		self.flip = not self.flip
 	end
