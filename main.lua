@@ -77,7 +77,7 @@ function draw_gaming()
 		circfill(4 + 8 * i, 5, 2, 14)
 	end
 	if player.hiding then
-		draw_player()
+		draw_player(player)
 	end
 	draw_enemies(enemies)
 	if not player.hiding then
@@ -85,7 +85,7 @@ function draw_gaming()
 	end
 	
 	-- debug print
-	-- print("player.dx:"..player.dx, 3)
+	-- print("player.vx:"..player.vx, 3)
 	-- print("player.dy:"..player.dy, 3)
 	-- print("player.x:"..player.x, 3)
 	-- print("player.y:"..player.y, 3)

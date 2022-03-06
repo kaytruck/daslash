@@ -13,7 +13,7 @@ function create_enemey_1()
 		h=8,
 		x=70,
 		y=16,
-		dx=0.5,
+		vx=0.5,
 		flip=false,
 		dead=false,
 		hp=6,
@@ -36,11 +36,11 @@ function update_enemy_1(self)
 	-- flip
 	local collide = collide_ground(self, 1)
 	if not collide then
-		self.dx = self.dx * -1
+		self.vx = self.vx * -1
 		self.flip = not self.flip
 	end
 	-- apply move
-	self.x = self.x + self.dx
+	self.x = self.x + self.vx
 end
 
 function animate_enemies(enemies)

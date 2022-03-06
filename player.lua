@@ -6,9 +6,9 @@ function init_player()
 		h=8,
 		x=40,
 		y=30,
-		dx=0,
+		vx=0,
 		dy=0,
-		max_dx=2,
+		max_vx=2,
 		max_dy=3,
 		max_dy_ladder=1,
 		acc_walk=0.8,
@@ -34,13 +34,13 @@ function init_player()
 end
 
 function update_player(p, enemies)
-    p.dx = p.dx * p.fric
+    p.vx = p.vx * p.fric
 	if p.dash_time > 0 then
         p.dash_time = p.dash_time - 1
 	else
         p.dy = p.dy + gravity
 	end
-	if abs(p.dx) < 0.5 then
+	if abs(p.vx) < 0.5 then
 		p.running = false
 	end	
 	p.ladder = "none"
@@ -52,12 +52,12 @@ function update_player(p, enemies)
 		if btn(0) then
 			p.flip = true
 			p.running = true
-            p.dx = p.dx - p.acc_walk
+            p.vx = p.vx - p.acc_walk
 		end
 		if btn(1) then
 			p.flip = false
 			p.running = true
-            p.dx = p.dx + p.acc_walk
+            p.vx = p.vx + p.acc_walk
 		end
 		if btn(2) then
 			p.ladder = "up"
@@ -74,16 +74,16 @@ function update_player(p, enemies)
 	-- dash
 	if p.dash_time > 0 then
 		if p.flip then
-            p.dx = p.dx - p.acc_dash
+            p.vx = p.vx - p.acc_dash
 		else
-            p.dx = p.dx + p.acc_dash
+            p.vx = p.vx + p.acc_dash
 		end
-	elseif abs(p.dx) > p.max_dx then
+	elseif abs(p.vx) > p.max_vx then
 		-- limit speed x-axis
-		if p.dx > 0 then
-			p.dx = p.max_dx
+		if p.vx > 0 then
+			p.vx = p.max_vx
 		else
-			p.dx = -p.max_dx
+			p.vx = -p.max_vx
 		end
 	end
 
@@ -128,20 +128,20 @@ function update_player(p, enemies)
 	end
 
 	-- collide wall
-	if p.dx > 0
+	if p.vx > 0
 	and collide_wall(p, "right") then
-		p.dx = 0
+		p.vx = 0
         p.x = p.x - (p.x + p.w) % 8
-	elseif p.dx < 0
+	elseif p.vx < 0
 	and collide_wall(p, "left") then
-		p.dx = 0
+		p.vx = 0
 	end
 
 	-- collide enemies
 	engage(p, enemies)
 
 	-- apply move
-    p.x = p.x + p.dx
+    p.x = p.x + p.vx
     p.y = p.y + p.dy
 	p.y = flr(p.y + 0.9)
 
@@ -181,8 +181,8 @@ function engage(p, enemies)
 			if p.flip == enemy.flip
 			and not enemy.underatk then
 				-- if dash through
-					-- if min(p.x, p.x + p.dx) < enemy.x
-					-- and max(p.x, p.x + p.dx) > enemy.x then
+					-- if min(p.x, p.x + p.vx) < enemy.x
+					-- and max(p.x, p.x + p.vx) > enemy.x then
 					-- 	enemy.hp -= p.atk
 					-- end
                 enemy.hp = enemy.hp - p.atk
