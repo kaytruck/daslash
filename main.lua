@@ -65,7 +65,8 @@ function draw_title()
 	print("press ❎ to start", 32, 82, blink_col)
 	print("🅾️ hiding", 16, 96, 6)
 	print("❎ dash and slash", 16,104,6)
-	print("by kaytruck", 80, 120, 6)
+	print("0.1", 2, 120, 13)
+	print("by kaytruck", 82, 120, 6)
 	
 end
 
