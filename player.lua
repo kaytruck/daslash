@@ -17,8 +17,10 @@ function init_player()
 		fric=0.5,
 		dash_time=0,
 		dash_time_max = 6,
+		hiding_cnt = 0,
+		hiding_cnt_max = 30,
 		atk=3,
-		hp=5,
+		hp=3,
 		-- stat
 		running=false,
 		falling=false,
@@ -27,6 +29,7 @@ function init_player()
 		chk_ladder="none",
 		flip=false,
 		hiding=false,
+		hiding_limit=false,
 		ladder="none",
 		-- anim
 		anim=0,
@@ -34,17 +37,21 @@ function init_player()
 end
 
 function update_player(p, enemies)
+	-- physics (friction and gravity)
     p.vx = p.vx * p.fric
 	if p.dash_time > 0 then
         p.dash_time = p.dash_time - 1
 	else
         p.dy = p.dy + gravity
 	end
+	-- running animation
 	if abs(p.vx) < 0.5 then
 		p.running = false
 	end	
+	-- on ladder ?
 	p.ladder = "none"
-	--control
+
+	-- control
 	if btn(4) then
 		p.hiding = true
 	else
@@ -70,6 +77,9 @@ function update_player(p, enemies)
 			p.dash_time = p.dash_time_max
 		end
 	end
+
+	-- hide
+	hiding(p)
 
 	-- dash
 	if p.dash_time > 0 then
@@ -156,6 +166,26 @@ function update_player(p, enemies)
 		p.x = window_l
 	elseif p.x > window_r - p.w then
 		p.x = window_r - p.w
+	end
+end
+
+function hiding(p)
+	if p.hiding then
+		if p.hiding_cnt < p.hiding_cnt_max then
+			p.hiding_cnt = p.hiding_cnt + 0.5
+		elseif p.hiding_cnt == p.hiding_cnt_max then
+			p.hiding_limit = true
+		end
+	else
+		if p.hiding_cnt > 0 then
+			p.hiding_cnt = p.hiding_cnt - 0.5
+		elseif p.hiding_cnt == 0 then
+			p.hiding_limit = false
+		end
+	end
+	if p.hiding
+	and p.hiding_limit then
+		p.hiding = false
 	end
 end
 

@@ -49,7 +49,7 @@ function update_gaming()
 end
 
 function update_gameover()
-	if btnp(x) then
+	if btnp(5) then
 		init()
 		_update = update_title
 		_draw = draw_title
@@ -63,7 +63,7 @@ function draw_title()
 	spr(192, 48, 25, 4, 4)
 	print("dash from behind, and slash!", 8, 62, 3)
 	print("press ❎ to start", 32, 82, blink_col)
-	print("🅾️ hiding", 16, 96, 6)
+	print("🅾️ hiding -- no damage", 16, 96, 6)
 	print("❎ dash and slash", 16,104,6)
 	print("0.1", 2, 120, 13)
 	print("by kaytruck", 82, 120, 6)
@@ -75,8 +75,19 @@ function draw_gaming()
 	draw_map()
 	-- draw player hp
 	for i=1,player.hp do
-		circfill(4 + 8 * i, 5, 2, 14)
+		circfill(2 + 8 * i, 5, 2, 14)
 	end
+	-- draw hiding time
+	rectfill(75, 2, 105, 8, 13)
+	local hiding_bar_col = 7
+	if player.hiding_cnt == 0 then
+		hiding_bar_col = 12
+	end
+	if player.hiding_limit then
+		hiding_bar_col = 2
+	end
+	rectfill(75, 2, (75 + player.hiding_cnt_max - player.hiding_cnt), 8, hiding_bar_col)
+
 	if player.hiding then
 		draw_player(player)
 	end
@@ -90,7 +101,10 @@ function draw_gaming()
 	-- print("player.dy:"..player.dy, 3)
 	-- print("player.x:"..player.x, 3)
 	-- print("player.y:"..player.y, 3)
-	print("player.chk_ladder:"..player.chk_ladder, 3)
+	-- print("player.chk_ladder:"..player.chk_ladder, 3)
+	-- print("player.hiding_cnt:"..player.hiding_cnt, 3)
+	-- print("player.hiding:"..(player.hiding and "true" or "false"), 3)
+	-- print("player.hiding_limit:"..(player.hiding_limit and "true" or "false"), 3)
 end
 
 function draw_gameover()
