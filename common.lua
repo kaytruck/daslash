@@ -60,31 +60,35 @@ function collide_ground(obj, offset)
 end
 
 function chk_ladder(obj)
-	-- bottom center
-	-- local x1 = obj.x + 2
-	-- local x1 = obj.x + 3
-	local x1 = obj.x + obj.w / 2
+	-- bottom left and right
+	local x1_l = obj.x + 2
+	local x1_r = obj.x + obj.w -3
 	local y1 = (obj.y + obj.h - 1)
-	-- bottom center + 1
-	-- local x2 = obj.x + obj.w - 2
-	-- local x2 = obj.x + obj.w - 3
-	local x2 = obj.x + obj.w / 2
+
+	-- bottom + 1 left and right
+	local x2_l = obj.x + 2
+	local x2_r = obj.x + obj.w -3
 	local y2 = (obj.y + obj.h)
 
 	local flg = 0x14
 
-	x1 = x1 / 8
+	x1_l = x1_l / 8
+	x1_r = x1_r / 8
 	y1 = y1 / 8
-	x2 = x2 / 8
+	x2_l = x2_l / 8
+	x2_r = x2_r / 8
 	y2 = y2 / 8
 
-    if fget(mget(x1, y1)) == flg then
-		if fget(mget(x2, y2)) == flg then
+    if fget(mget(x1_l, y1)) == flg 
+	or fget(mget(x1_r, y1)) == flg then
+		if fget(mget(x2_l, y2)) == flg
+		or fget(mget(x2_r, y2)) == flg then
 			return "in"
 		else
 			return "bottom"
 		end
-	elseif fget(mget(x2, y2)) == flg then
+	elseif fget(mget(x2_l	, y2)) == flg
+	or fget(mget(x2_r, y2)) == flg then
 		return "on"
 	end
 	return "none"
