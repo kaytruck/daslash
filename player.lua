@@ -18,7 +18,7 @@ function init_player()
 		dash_time=0,
 		dash_time_max = 6,
 		atk=3,
-		hp=3,
+		hp=5,
 		-- stat
 		running=false,
 		falling=false,

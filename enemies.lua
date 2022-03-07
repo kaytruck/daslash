@@ -1,22 +1,28 @@
 function init_enemies()
 	local enemies = {}
-	add(enemies, create_enemey_1())
+	add(enemies, create_enemey_1(64, 65, 8 * 8, 2 * 8, 0.5, 6))
+	add(enemies, create_enemey_1(80, 81, 9 * 8, 12 * 8, -0.7, 3))
 	return enemies
 end
-function create_enemey_1()
+
+function create_enemey_1(init_sp, init_sp_end, init_x, init_y, init_vx, init_hp)
+	local flip = false
+	if init_vx < 0 then
+		flip = true
+	end
 	return {
-		sp=64,
-		sp_begin=64,
-		sp_end=65,
+		sp=init_sp,
+		sp_begin=init_sp,
+		sp_end=init_sp_end,
 		spw=1,				-- sprite width
 		w=8,
 		h=8,
-		x=70,
-		y=16,
-		vx=0.5,
-		flip=false,
+		x=init_x,
+		y=init_y,
+		vx=init_vx,
+		flip=flip,
 		dead=false,
-		hp=6,
+		hp=init_hp,
 		underatk=false,		-- under attack flag
 		-- anim
 		anim=0,
