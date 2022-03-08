@@ -18,9 +18,9 @@ function init_player()
 		dash_time=0,
 		dash_time_max = 6,
 		hiding_cnt = 0,
-		hiding_cnt_max = 30,
+		hiding_cnt_max = 40,
 		atk=3,
-		hp=3,
+		hp=5,					-- hp
 		-- stat
 		running=false,
 		falling=false,

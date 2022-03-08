@@ -74,11 +74,12 @@ function draw_gaming()
 	cls(1)
 	draw_map()
 	-- draw player hp
-	for i=1,player.hp do
-		circfill(2 + 8 * i, 5, 2, 14)
+	for i=0, player.hp - 1 do
+		circfill(5 + 8 * i, 5, 2, 14)
 	end
-	-- draw hiding time
-	rectfill(75, 2, 105, 8, 13)
+	-- draw hiding time bar
+	local hbx = 84
+	rectfill(hbx, 2, (hbx + player.hiding_cnt_max), 8, 13)
 	local hiding_bar_col = 7
 	if player.hiding_cnt == 0 then
 		hiding_bar_col = 12
@@ -86,7 +87,7 @@ function draw_gaming()
 	if player.hiding_limit then
 		hiding_bar_col = 2
 	end
-	rectfill(75, 2, (75 + player.hiding_cnt_max - player.hiding_cnt), 8, hiding_bar_col)
+	rectfill(hbx, 2, (hbx + player.hiding_cnt_max - player.hiding_cnt), 8, hiding_bar_col)
 
 	if player.hiding then
 		draw_player(player)
