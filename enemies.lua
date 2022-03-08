@@ -1,7 +1,8 @@
-function init_enemies()
+function init_enemies(es)
 	local enemies = {}
-	add(enemies, create_enemey_1(64, 65, 8 * 8, 2 * 8, 0.5, 6))
-	add(enemies, create_enemey_1(80, 81, 9 * 8, 12 * 8, -0.7, 3))
+	for e in all(es) do
+		add(enemies, es.create(e.sp, e.sp_end, e.x, e.y, e.vx, e.hp))
+	end
 	return enemies
 end
 
@@ -21,7 +22,7 @@ function create_enemey_1(init_sp, init_sp_end, init_x, init_y, init_vx, init_hp)
 		y=init_y,
 		vx=init_vx,
 		flip=flip,
-		dead=false,
+		-- dead=false,
 		hp=init_hp,
 		underatk=false,		-- under attack flag
 		-- anim

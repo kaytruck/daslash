@@ -9,6 +9,8 @@ function init()
 	-- settings
 	dead_h = 130
 	gravity=0.2
+	-- gaming info
+	time_cnt = 0
 	-- window limits
 	window_l = 0
 	window_r = 128
@@ -17,12 +19,12 @@ function init()
 	blink_col2 = 14
 	blink_col = blink_col1
 	blink_cnt = 0
+	-- stage
+	stage = init_stages()
 	-- player
-	player = init_player()
+	player = init_player(stage.p_x, stage.p_y)
 	-- enemies
-	enemies = init_enemies()
-	-- gaming info
-	time_cnt = 0
+	enemies = init_enemies(stage.enemies)
 end
 
 -- update
@@ -81,7 +83,7 @@ end
 
 function draw_gaming()
 	cls(1)
-	draw_map()
+	draw_map(stage.m_x, stage.m_y, stage.m_w, stage.m_h)
 	rectfill(0, 0, 127, 10, 0)
 	-- draw player hp
 	for i=0, player.hp - 1 do
@@ -128,4 +130,8 @@ function draw_gameover()
 	cls(1)
 	print("you died", 32, 32, 6)
 	print("press ❎ to title", 32, 48, 6)
+end
+
+function draw_map(m_x, m_y, m_w, m_h)
+	map(m_x, m_y, 0, 0, m_w, m_w)
 end

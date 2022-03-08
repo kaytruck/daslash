@@ -6,7 +6,7 @@ __lua__
 
 #include main.lua
 #include common.lua
-#include map.lua
+#include stages.lua
 #include player.lua
 #include enemies.lua
 

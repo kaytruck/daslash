@@ -1,11 +1,11 @@
-function init_player()
+function init_player(init_x, init_y)
 	return {
 		sp=1,				-- sprite
 		spw=1,				-- sprite width
 		w=8,
 		h=8,
-		x=40,
-		y=30,
+		x=init_x,
+		y=init_y,
 		vx=0,
 		dy=0,
 		max_vx=2,
