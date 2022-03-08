@@ -18,9 +18,10 @@ function init_player()
 		dash_time=0,
 		dash_time_max = 6,
 		hiding_cnt = 0,
-		hiding_cnt_max = 40,
+		hiding_cnt_max = 30,
 		atk=3,
-		hp=5,					-- hp
+		hp=3,					-- hp
+		life_time = 30,			-- sec.
 		-- stat
 		running=false,
 		falling=false,
@@ -157,7 +158,8 @@ function update_player(p, enemies)
 
 	-- player die
 	if p.y > dead_h 
-	or p.hp <= 0 then
+	or p.hp <= 0 
+	or p.life_time <= 0 then
 		_update = update_gameover
 		_draw = draw_gameover
 	end

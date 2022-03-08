@@ -21,6 +21,8 @@ function init()
 	player = init_player()
 	-- enemies
 	enemies = init_enemies()
+	-- gaming info
+	time_cnt = 0
 end
 
 -- update
@@ -42,6 +44,13 @@ function update_title()
 end
 
 function update_gaming()
+	-- life time count down
+	time_cnt = time_cnt + 1
+	if time_cnt % 30 == 1
+	and player.life_time > 0 then
+		player.life_time = player.life_time - 1
+	end
+
 	update_player(player, enemies)
 	update_enemies(enemies)
 	animate_player(player)
@@ -73,10 +82,14 @@ end
 function draw_gaming()
 	cls(1)
 	draw_map()
+	rectfill(0, 0, 127, 10, 0)
 	-- draw player hp
 	for i=0, player.hp - 1 do
 		circfill(5 + 8 * i, 5, 2, 14)
 	end
+	-- draw life time
+	local life_time_s = "0"..player.life_time
+	print(sub(life_time_s, #life_time_s - 1), 62, 3, 15)
 	-- draw hiding time bar
 	local hbx = 84
 	rectfill(hbx, 2, (hbx + player.hiding_cnt_max), 8, 13)
@@ -89,10 +102,13 @@ function draw_gaming()
 	end
 	rectfill(hbx, 2, (hbx + player.hiding_cnt_max - player.hiding_cnt), 8, hiding_bar_col)
 
+	-- draw player if hiding
 	if player.hiding then
 		draw_player(player)
 	end
+	-- draw enemies
 	draw_enemies(enemies)
+	-- draw player not hiding
 	if not player.hiding then
 		draw_player(player)
 	end
