@@ -124,6 +124,7 @@ function draw_gaming()
 	-- print("player.hiding_cnt:"..player.hiding_cnt, 3)
 	-- print("player.hiding:"..(player.hiding and "true" or "false"), 3)
 	-- print("player.hiding_limit:"..(player.hiding_limit and "true" or "false"), 3)
+	print("enemies:"..#enemies, 3)
 end
 
 function draw_gameover()

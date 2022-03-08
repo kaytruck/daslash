@@ -49,7 +49,7 @@ function update_player(p, enemies)
 	if abs(p.vx) < 0.5 then
 		p.running = false
 	end	
-	-- on ladder ?
+	-- on ladder ? reset
 	p.ladder = "none"
 
 	-- control
