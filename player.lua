@@ -21,7 +21,6 @@ function init_player(init_x, init_y)
 		hiding_cnt_max = 30,
 		atk=3,
 		hp=3,					-- hp
-		life_time = 30,			-- sec.
 		-- stat
 		running=false,
 		falling=false,
@@ -147,7 +146,10 @@ function update_player(p, enemies)
 	and collide_wall(p, "left") then
 		p.vx = 0
 	end
-
+	
+	-- check map obj (goal, item, ...)
+	cur_mapobj = chk_mapobj(p)
+	
 	-- collide enemies
 	engage(p, enemies)
 
@@ -156,18 +158,16 @@ function update_player(p, enemies)
     p.y = p.y + p.dy
 	p.y = flr(p.y + 0.9)
 
-	-- player die
-	if p.y > dead_h 
-	or p.hp <= 0 
-	or p.life_time <= 0 then
-		_update = update_gameover
-		_draw = draw_gameover
-	end
 	-- limit player to window
 	if p.x < window_l then
 		p.x = window_l
 	elseif p.x > window_r - p.w then
 		p.x = window_r - p.w
+	end
+
+	-- check player die
+	if player.y > dead_h then
+		p.hp = 0
 	end
 end
 
@@ -250,7 +250,6 @@ function animate_player(player)
 	elseif player.running then
 		if time() - player.anim > 0.1 then
 			player.anim = time()
-			-- player.sp += 1
             player.sp = player.sp + 1
 			if player.sp > 6 then
 				player.sp = 2

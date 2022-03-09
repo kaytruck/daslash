@@ -35,13 +35,9 @@ end
 function collide_ground(obj, offset)
 	-- bottom left
 	local x1 = obj.x + 2
-	-- local x1 = obj.x + 3
-	-- local x1 = obj.x + obj.w / 2
 	local y1 = (obj.y + obj.h - 1) + offset
 	-- bottom right
 	local x2 = obj.x + obj.w - 3
-	-- local x2 = obj.x + obj.w - 3
-	-- local x2 = obj.x + obj.w / 2
 	local y2 = (obj.y + obj.h - 1) + offset
 	local flg = 0x4
 
@@ -87,9 +83,21 @@ function chk_ladder(obj)
 		else
 			return "bottom"
 		end
-	elseif fget(mget(x2_l	, y2)) == flg
+	elseif fget(mget(x2_l, y2)) == flg
 	or fget(mget(x2_r, y2)) == flg then
 		return "on"
 	end
 	return "none"
+end
+
+function chk_mapobj(player)
+	local x = player.x + player.w / 2
+	local y = player.y + player.h / 2
+	local f = fget(mget(x/8, y/8))
+
+	if f == 0x11 then
+		return "door"
+	else
+		return "none"
+	end
 end

@@ -11,6 +11,7 @@ function init()
 	gravity=0.2
 	-- gaming info
 	time_cnt = 0
+	cur_mapobj = "none"
 	-- window limits
 	window_l = 0
 	window_r = 128
@@ -20,11 +21,17 @@ function init()
 	blink_col = blink_col1
 	blink_cnt = 0
 	-- stage
-	stage = init_stages()
+	stages = load_stages()
+	sn = 1
+	-- stage = stages[stage_n]
+	init_stage()
+end
+
+function init_stage()
 	-- player
-	player = init_player(stage.p_x, stage.p_y)
+	player = init_player(stages[sn].p_x, stages[sn].p_y)
 	-- enemies
-	enemies = init_enemies(stage.enemies)
+	enemies = init_enemies(stages[sn].enemies)
 end
 
 -- update
@@ -49,12 +56,33 @@ function update_gaming()
 	-- life time count down
 	time_cnt = time_cnt + 1
 	if time_cnt % 30 == 1
-	and player.life_time > 0 then
-		player.life_time = player.life_time - 1
+	and stages[sn].life_time > 0 then
+		stages[sn].life_time = stages[sn].life_time - 1
 	end
 
 	update_player(player, enemies)
 	update_enemies(enemies)
+
+	-- check finish
+	if #enemies == 0
+	and cur_mapobj == "door" then
+		if player.hp > 0 
+		and sn < #stages then
+			-- goto next stage
+			sn = sn + 1
+			init_stage()
+		else
+			-- cleard
+			_update = update_gameover
+			_draw = draw_gameover
+		end
+	elseif player.hp == 0
+	or stages[sn].life_time == 0 then
+		-- game over
+		_update = update_gameover
+		_draw = draw_gameover
+	end
+	
 	animate_player(player)
 	animate_enemies(enemies)
 end
@@ -83,14 +111,15 @@ end
 
 function draw_gaming()
 	cls(1)
-	draw_map(stage.m_x, stage.m_y, stage.m_w, stage.m_h)
+	draw_map()
+	-- draw info area background
 	rectfill(0, 0, 127, 10, 0)
 	-- draw player hp
 	for i=0, player.hp - 1 do
 		circfill(5 + 8 * i, 5, 2, 14)
 	end
 	-- draw life time
-	local life_time_s = "0"..player.life_time
+	local life_time_s = "0"..stages[sn].life_time
 	print(sub(life_time_s, #life_time_s - 1), 62, 3, 15)
 	-- draw hiding time bar
 	local hbx = 84
@@ -124,15 +153,20 @@ function draw_gaming()
 	-- print("player.hiding_cnt:"..player.hiding_cnt, 3)
 	-- print("player.hiding:"..(player.hiding and "true" or "false"), 3)
 	-- print("player.hiding_limit:"..(player.hiding_limit and "true" or "false"), 3)
-	print("enemies:"..#enemies, 3)
+	-- print("cur_mapobj:"..cur_mapobj, 0, 10, 3)
+	-- print("#enemies:"..#enemies, 0, 18, 3)
 end
 
 function draw_gameover()
 	cls(1)
-	print("you died", 32, 32, 6)
+	local msg = "cleard"
+	if player.hp == 0 then
+		msg = "you died"
+	end
+	print(msg, 32, 32, 6)
 	print("press ❎ to title", 32, 48, 6)
 end
 
-function draw_map(m_x, m_y, m_w, m_h)
-	map(m_x, m_y, 0, 0, m_w, m_w)
+function draw_map()
+	map(stages[sn].m_x, stages[sn].m_y, 0, 0, stages[sn].m_w, stages[sn].m_w)
 end
