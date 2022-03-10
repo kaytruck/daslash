@@ -114,13 +114,15 @@ function draw_gaming()
 	draw_map()
 	-- draw info area background
 	rectfill(0, 0, 127, 10, 0)
+	-- draw stage num
+	print(""..sn.."/"..#stages, 2, 3, 9)
 	-- draw player hp
 	for i=0, player.hp - 1 do
-		circfill(5 + 8 * i, 5, 2, 14)
+		circfill(25 + 8 * i, 5, 2, 14)
 	end
 	-- draw life time
 	local life_time_s = "0"..stages[sn].life_time
-	print(sub(life_time_s, #life_time_s - 1), 62, 3, 15)
+	print(sub(life_time_s, #life_time_s - 1), 75, 3, 15)
 	-- draw hiding time bar
 	local hbx = 84
 	rectfill(hbx, 2, (hbx + player.hiding_cnt_max), 8, 13)
