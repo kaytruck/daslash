@@ -24,6 +24,9 @@ function create_enemey_1(init_sp, init_sp_end, init_x, init_y, init_vx, init_hp)
 		y=init_y,
 		vx=init_vx,
 		flip=flip,
+		-- status
+		downt=0,
+		downt_max=100,
 		dead=false,
 		hp=init_hp,
 		underatk=false,		-- under attack flag
@@ -42,6 +45,9 @@ function update_enemies(enemies)
 end
 
 function update_enemy_1(self)
+	if self.downt > 0 then
+		self.downt = self.downt - 1
+	end
 	-- flip
 	local collide_ground = collide_ground(self, 1)
 	local dir = "right"

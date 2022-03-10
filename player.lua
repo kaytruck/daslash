@@ -7,10 +7,10 @@ function init_player(init_x, init_y)
 		x=init_x,
 		y=init_y,
 		vx=0,
-		dy=0,
+		vy=0,
 		max_vx=2,
-		max_dy=3,
-		max_dy_ladder=1,
+		max_vy=3,
+		max_vy_ladder=1,
 		acc_walk=0.8,
 		acc_dash=2,
 		acc_jump=3,
@@ -42,7 +42,7 @@ function update_player(p, enemies)
 	if p.dash_time > 0 then
         p.dash_time = p.dash_time - 1
 	else
-        p.dy = p.dy + gravity
+        p.vy = p.vy + gravity
 	end
 	-- running animation
 	if abs(p.vx) < 0.5 then
@@ -98,22 +98,22 @@ function update_player(p, enemies)
 	end
 
 	-- limit speed y-axis
-	p.dy = mid(-p.max_dy, p.dy, p.max_dy)
+	p.vy = mid(-p.max_vy, p.vy, p.max_vy)
 
 	-- falling
-	if p.dy > 0 and p.chk_ladder == "none" then
+	if p.vy > 0 and p.chk_ladder == "none" then
 		p.falling = true
 		p.landing = false
 	end
 
 	-- collide ground
-	for offset = 1, flr(p.dy + 0.9) do
+	for offset = 1, flr(p.vy + 0.9) do
 		local collide = collide_ground(p, offset)
 		if collide then
 			p.falling = false
 			p.landing = true
-			if p.dy > 0 then
-				p.dy = 0
+			if p.vy > 0 then
+				p.vy = 0
 			end
 			break
 		end
@@ -122,18 +122,18 @@ function update_player(p, enemies)
 	p.chk_ladder = chk_ladder(p)
 	if p.chk_ladder == "on" then
 		if p.ladder == "down" then
-			p.dy = 1
+			p.vy = 1
 		end
 	elseif p.chk_ladder == "in" then
 		if p.ladder == "up" then
-			p.dy = -1
+			p.vy = -1
 		end
 		if p.ladder == "down" then
-			p.dy = 1
+			p.vy = 1
 		end
 	elseif p.chk_ladder == "bottom" then
 		if p.ladder == "up" then
-			p.dy = -1
+			p.vy = -1
 		end
 	end
 
@@ -155,7 +155,7 @@ function update_player(p, enemies)
 
 	-- apply move
     p.x = p.x + p.vx
-    p.y = p.y + p.dy
+    p.y = p.y + p.vy
 	p.y = flr(p.y + 0.9)
 
 	-- limit player to window
@@ -213,17 +213,15 @@ function engage(p, enemies)
 			if p.flip == enemy.flip
 			and not enemy.underatk then
 				-- if dash through
-					-- if min(p.x, p.x + p.vx) < enemy.x
-					-- and max(p.x, p.x + p.vx) > enemy.x then
-					-- 	enemy.hp -= p.atk
-					-- end
                 enemy.hp = enemy.hp - p.atk
 				enemy.underatk = true
+				enemy.downt = enemy.downt_max
 			end
 		else
 			-- player damage
 			if not p.hiding
-			and not p.underatk then
+			and not p.underatk 
+			and enemy.downt ~= 0 then
                 p.hp = p.hp - 1
 				p.underatk = true
 			end
@@ -257,7 +255,7 @@ function animate_player(player)
 		end
 	elseif (player.chk_ladder == "in"
 	or player.chk_ladder == "bottom")
-	and player.dy ~= 0 then
+	and player.vy ~= 0 then
 		if time() - player.anim > 0.1 then
 			player.anim = time()
 			if player.sp == 8 then

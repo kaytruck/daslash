@@ -148,7 +148,7 @@ function draw_gaming()
 	
 	-- debug print
 	-- print("player.vx:"..player.vx, 3)
-	-- print("player.dy:"..player.dy, 3)
+	-- print("player.vy:"..player.vy, 3)
 	-- print("player.x:"..player.x, 3)
 	-- print("player.y:"..player.y, 3)
 	-- print("player.chk_ladder:"..player.chk_ladder, 3)
