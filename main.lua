@@ -12,6 +12,7 @@ function init()
 	-- gaming info
 	time_cnt = 0
 	cur_mapobj = "none"
+	score = 0
 	-- window limits
 	window_l = 0
 	window_r = 128
@@ -41,15 +42,7 @@ function update_title()
 		_draw = draw_gaming
 	end
 	-- blink start message
-	blink_cnt = blink_cnt + 1
-	if blink_cnt > 7 then
-		blink_cnt = 0
-		if blink_col == blink_col1 then
-			blink_col = blink_col2
-		else
-			blink_col = blink_col1
-		end
-	end
+	blink()
 end
 
 function update_gaming()
@@ -63,12 +56,13 @@ function update_gaming()
 	update_player(player, enemies)
 	update_enemies(enemies)
 
-	-- check finish
+	-- check stage finish
 	if #enemies == 0
 	and cur_mapobj == "door" then
 		if player.hp > 0 
 		and sn < #stages then
 			-- goto next stage
+			score = score + stages[sn].life_time
 			sn = sn + 1
 			init_stage()
 		else
@@ -88,10 +82,24 @@ function update_gaming()
 end
 
 function update_gameover()
+	-- blink start message
+	blink()
 	if btnp(5) then
 		init()
 		_update = update_title
 		_draw = draw_title
+	end
+end
+
+function blink()
+	blink_cnt = blink_cnt + 1
+	if blink_cnt > 7 then
+		blink_cnt = 0
+		if blink_col == blink_col1 then
+			blink_col = blink_col2
+		else
+			blink_col = blink_col1
+		end
 	end
 end
 
@@ -165,8 +173,9 @@ function draw_gameover()
 	if player.hp == 0 then
 		msg = "you died"
 	end
-	print(msg, 32, 32, 6)
-	print("press ❎ to title", 32, 48, 6)
+	print(msg, 32, 32, 14)
+	print("score:"..score, 32, 48, 6)
+	print("press ❎ to title", 32, 64, blink_col)
 end
 
 function draw_map()
