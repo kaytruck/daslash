@@ -26,7 +26,7 @@ function create_enemey_1(init_sp, init_sp_end, init_x, init_y, init_vx, init_hp)
 		flip=flip,
 		-- status
 		downt=0,
-		downt_max=100,
+		downt_max=10,
 		dead=false,
 		hp=init_hp,
 		underatk=false,		-- under attack flag
@@ -61,7 +61,9 @@ function update_enemy_1(self)
 		self.flip = not self.flip
 	end
 	-- apply move
-	self.x = self.x + self.vx
+	if self.downt == 0 then
+		self.x = self.x + self.vx
+	end
 end
 
 function animate_enemies(enemies)

@@ -221,7 +221,7 @@ function engage(p, enemies)
 			-- player damage
 			if not p.hiding
 			and not p.underatk 
-			and enemy.downt ~= 0 then
+			and enemy.downt == 0 then
                 p.hp = p.hp - 1
 				p.underatk = true
 			end

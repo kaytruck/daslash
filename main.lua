@@ -165,6 +165,7 @@ function draw_gaming()
 	-- print("player.hiding_limit:"..(player.hiding_limit and "true" or "false"), 3)
 	-- print("cur_mapobj:"..cur_mapobj, 0, 10, 3)
 	-- print("#enemies:"..#enemies, 0, 18, 3)
+	-- print("enemies[1].downt:"..enemies[1].downt, 0, 18, 3)
 end
 
 function draw_gameover()
