@@ -20,7 +20,7 @@ function init_player(init_x, init_y)
 		hiding_cnt = 0,
 		hiding_cnt_max = 30,
 		atk=3,
-		hp=3,					-- hp
+		hp=5,					-- hp
 		-- stat
 		running=false,
 		falling=false,
