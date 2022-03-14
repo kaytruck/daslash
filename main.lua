@@ -10,8 +10,8 @@ function init()
 	dead_h = 130
 	gravity=0.2
 	-- gaming info
-	time_cnt = 0
 	cur_mapobj = "none"
+	time_cnt = 0
 	score = 0
 	-- window limits
 	window_l = 0
@@ -24,7 +24,6 @@ function init()
 	-- stage
 	stages = load_stages()
 	sn = 1
-	-- stage = stages[stage_n]
 	init_stage()
 end
 
@@ -33,6 +32,8 @@ function init_stage()
 	player = init_player(stages[sn].p_x, stages[sn].p_y)
 	-- enemies
 	enemies = init_enemies(stages[sn].enemies)
+	-- life time
+	life_time = stages[sn].life_time
 end
 
 -- update
@@ -49,8 +50,8 @@ function update_gaming()
 	-- life time count down
 	time_cnt = time_cnt + 1
 	if time_cnt % 30 == 1
-	and stages[sn].life_time > 0 then
-		stages[sn].life_time = stages[sn].life_time - 1
+	and life_time > 0 then
+		life_time = life_time - 1
 	end
 
 	update_player(player, enemies)
@@ -62,7 +63,7 @@ function update_gaming()
 		if player.hp > 0 
 		and sn < #stages then
 			-- goto next stage
-			score = score + stages[sn].life_time
+			score = score + life_time
 			sn = sn + 1
 			init_stage()
 		else
@@ -71,7 +72,8 @@ function update_gaming()
 			_draw = draw_gameover
 		end
 	elseif player.hp == 0
-	or stages[sn].life_time == 0 then
+	-- or stages[sn].life_time == 0 then
+	or life_time == 0 then
 		-- game over
 		_update = update_gameover
 		_draw = draw_gameover
@@ -105,6 +107,7 @@ end
 
 -- draw
 function draw_title()
+	-- camera()
 	cls(1)
 	print("daslash", 32, 8, 12)
 	spr(192, 48, 25, 4, 4)
@@ -118,6 +121,7 @@ function draw_title()
 end
 
 function draw_gaming()
+	-- camera(stages[sn].s_x, stages[sn].s_y)
 	cls(1)
 	draw_map()
 	-- draw info area background
@@ -129,7 +133,7 @@ function draw_gaming()
 		circfill(25 + 8 * i, 5, 2, 14)
 	end
 	-- draw life time
-	local life_time_s = "0"..stages[sn].life_time
+	local life_time_s = "0"..life_time
 	print(sub(life_time_s, #life_time_s - 1), 75, 3, 15)
 	-- draw hiding time bar
 	local hbx = 84
@@ -157,8 +161,8 @@ function draw_gaming()
 	-- debug print
 	-- print("player.vx:"..player.vx, 3)
 	-- print("player.vy:"..player.vy, 3)
-	-- print("player.x:"..player.x, 3)
-	-- print("player.y:"..player.y, 3)
+	-- print("player.x:"..player.x, 0, 18, 3)
+	-- print("player.y:"..player.y, 0, 25, 3)
 	-- print("player.chk_ladder:"..player.chk_ladder, 3)
 	-- print("player.hiding_cnt:"..player.hiding_cnt, 3)
 	-- print("player.hiding:"..(player.hiding and "true" or "false"), 3)
@@ -166,9 +170,11 @@ function draw_gaming()
 	-- print("cur_mapobj:"..cur_mapobj, 0, 10, 3)
 	-- print("#enemies:"..#enemies, 0, 18, 3)
 	-- print("enemies[1].downt:"..enemies[1].downt, 0, 18, 3)
+	-- print("stages[sn].life_time:"..s	tages[sn].life_time, 0, 18, 3)
 end
 
 function draw_gameover()
+	-- camera()
 	cls(1)
 	local msg = "cleard"
 	if player.hp == 0 then

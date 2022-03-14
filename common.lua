@@ -18,10 +18,10 @@ function collide_wall(obj, dir)
 	end
 
 	-- pixel to tile
-    x1 = x1 / 8
-    y1 = y1 / 8
-    x2 = x2 / 8
-    y2 = y2 / 8
+    x1 = x1 / 8 + stages[sn].m_x
+    y1 = y1 / 8 + stages[sn].m_y
+    x2 = x2 / 8 + stages[sn].m_x
+    y2 = y2 / 8 + stages[sn].m_y
 
 	if fget(mget(x1, y1)) == flg
 	or fget(mget(x2, y2)) == flg
@@ -41,10 +41,10 @@ function collide_ground(obj, offset)
 	local y2 = (obj.y + obj.h - 1) + offset
 	local flg = 0x4
 
-	x1 = x1 / 8
-	y1 = y1 / 8
-	x2 = x2 / 8
-	y2 = y2 / 8
+	x1 = x1 / 8 + stages[sn].m_x
+	y1 = y1 / 8 + stages[sn].m_y
+	x2 = x2 / 8 + stages[sn].m_x
+	y2 = y2 / 8 + stages[sn].m_y
 
 	if (fget(mget(x1, y1)) & flg) ~= 0
 	or (fget(mget(x2, y2)) & flg) ~= 0
@@ -68,12 +68,12 @@ function chk_ladder(obj)
 
 	local flg = 0x14
 
-	x1_l = x1_l / 8
-	x1_r = x1_r / 8
-	y1 = y1 / 8
-	x2_l = x2_l / 8
-	x2_r = x2_r / 8
-	y2 = y2 / 8
+	x1_l = x1_l / 8 + stages[sn].m_x
+	x1_r = x1_r / 8 + stages[sn].m_x
+	y1 = y1 / 8 + stages[sn].m_y
+	x2_l = x2_l / 8 + stages[sn].m_x
+	x2_r = x2_r / 8 + stages[sn].m_x
+	y2 = y2 / 8 + stages[sn].m_y
 
     if fget(mget(x1_l, y1)) == flg 
 	or fget(mget(x1_r, y1)) == flg then
@@ -93,7 +93,7 @@ end
 function chk_mapobj(player)
 	local x = player.x + player.w / 2
 	local y = player.y + player.h / 2
-	local f = fget(mget(x/8, y/8))
+	local f = fget(mget(x/8 + stages[sn].m_x, y/8 + stages[sn].m_y))
 
 	if f == 0x11 then
 		return "door"
