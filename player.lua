@@ -17,6 +17,8 @@ function init_player(init_x, init_y)
 		fric=0.5,
 		dash_time=0,
 		dash_time_max = 6,
+		cool_time = 0,
+		cool_time_max = 4,
 		hiding_cnt = 0,
 		hiding_cnt_max = 30,
 		atk=3,
@@ -41,8 +43,14 @@ function update_player(p, enemies)
     p.vx = p.vx * p.fric
 	if p.dash_time > 0 then
         p.dash_time = p.dash_time - 1
+		if p.dash_time == 0 then
+			p.cool_time = p.cool_time_max
+		end
 	else
         p.vy = p.vy + gravity
+	end
+	if p.cool_time > 0 then
+		p.cool_time = p.cool_time - 1
 	end
 	-- running animation
 	if abs(p.vx) < 0.5 then
@@ -220,7 +228,8 @@ function engage(p, enemies)
 		else
 			-- player damage
 			if not p.hiding
-			and not p.underatk 
+			and not p.underatk
+			and p.dash_time > 0
 			and enemy.downt == 0 then
                 p.hp = p.hp - 1
 				p.underatk = true
