@@ -133,8 +133,12 @@ function draw_gaming()
 		circfill(25 + 8 * i, 5, 2, 14)
 	end
 	-- draw life time
+	local life_time_c = 15
+	if life_time / stages[sn].life_time < 0.2 then
+		life_time_c = 8
+	end
 	local life_time_s = "0"..life_time
-	print(sub(life_time_s, #life_time_s - 1), 75, 3, 15)
+	print(sub(life_time_s, #life_time_s - 1), 75, 3, life_time_c)
 	-- draw hiding time bar
 	local hbx = 84
 	rectfill(hbx, 2, (hbx + player.hiding_cnt_max), 8, 13)
@@ -176,9 +180,10 @@ end
 function draw_gameover()
 	-- camera()
 	cls(1)
-	local msg = "cleard"
-	if player.hp == 0 then
-		msg = "you died"
+	local msg = "you died"
+	if #stages == sn
+	and player.hp > 0 then
+		msg = "cleard"
 	end
 	print(msg, 32, 32, 14)
 	print("score:"..score, 32, 48, 6)
