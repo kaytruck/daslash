@@ -21,6 +21,9 @@ function init()
 	blink_col2 = 14
 	blink_col = blink_col1
 	blink_cnt = 0
+	-- gameover screen
+	shake_intensity = 0
+	shake_intensity_max = 6
 	-- stage
 	stages = load_stages()
 	sn = 1
@@ -75,6 +78,7 @@ function update_gaming()
 	-- or stages[sn].life_time == 0 then
 	or life_time == 0 then
 		-- game over
+		shake_intensity = shake_intensity_max
 		_update = update_gameover
 		_draw = draw_gameover
 	end
@@ -84,12 +88,26 @@ function update_gaming()
 end
 
 function update_gameover()
-	-- blink start message
-	blink()
-	if btnp(5) then
-		init()
-		_update = update_title
-		_draw = draw_title
+	if shake_intensity > 0 then
+		shake()
+	else
+		-- blink start message
+		blink()
+		if btnp(5) then
+			init()
+			_update = update_title
+			_draw = draw_title
+		end
+	end
+end
+
+function shake()
+	local shake_x = rnd(shake_intensity) - (shake_intensity / 2)
+	local shake_y = rnd(shake_intensity) - (shake_intensity / 2)
+	camera(shake_x, shake_y)
+	shake_intensity = shake_intensity * 0.9
+	if shake_intensity < 0.3 then
+		shake_intensity = 0
 	end
 end
 
@@ -175,19 +193,24 @@ function draw_gaming()
 	-- print("#enemies:"..#enemies, 0, 18, 3)
 	-- print("enemies[1].downt:"..enemies[1].downt, 0, 18, 3)
 	-- print("stages[sn].life_time:"..s	tages[sn].life_time, 0, 18, 3)
+	-- print("shake_intensity:"..shake_intensity, 0, 18, 3)
 end
 
 function draw_gameover()
-	-- camera()
-	cls(1)
-	local msg = "you died"
-	if #stages == sn
-	and player.hp > 0 then
-		msg = "cleard"
+	if shake_intensity > 0 then
+		draw_gaming()
+	else
+		cls(1)
+		local msg = "you died"
+		if #stages == sn
+		and player.hp > 0 then
+			msg = "cleard"
+		end
+		print(msg, 32, 32, 14)
+		print("score:"..score, 32, 48, 6)
+		print("press ❎ to title", 32, 64, blink_col)
 	end
-	print(msg, 32, 32, 14)
-	print("score:"..score, 32, 48, 6)
-	print("press ❎ to title", 32, 64, blink_col)
+	camera()
 end
 
 function draw_map()
