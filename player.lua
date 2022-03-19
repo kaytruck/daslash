@@ -1,11 +1,11 @@
-function init_player(init_x, init_y)
+function create_player()
 	return {
 		sp=1,				-- sprite
 		spw=1,				-- sprite width
 		w=8,
 		h=8,
-		x=init_x,
-		y=init_y,
+		x=0,
+		y=0,
 		vx=0,
 		vy=0,
 		max_vx=2,
@@ -22,7 +22,10 @@ function init_player(init_x, init_y)
 		hiding_cnt = 0,
 		hiding_cnt_max = 30,
 		atk=3,
-		hp=3,					-- hp
+		-- hp
+		hplimit=6,
+		hpmax=3,
+		hp=3,
 		-- stat
 		running=false,
 		falling=false,

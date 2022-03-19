@@ -1,3 +1,7 @@
+f_door = 0x11
+f_hpmaxup = 0x22
+f_hpup = 0x21
+
 function collide_wall(obj, dir)
 	local x1 = 0
 	local y1 = 0
@@ -95,9 +99,23 @@ function chk_mapobj(player)
 	local y = player.y + player.h / 2
 	local f = fget(mget(x/8 + stages[sn].m_x, y/8 + stages[sn].m_y))
 
-	if f == 0x11 then
-		return "door"
+	local mobj = "none"
+	if f == f_door then
+		mobj = "door"
+	elseif f == f_hpmaxup then
+		mobj = "hpmaxup"
+	elseif f == f_hpup then
+		mobj = "hpup"
 	else
-		return "none"
+		mobj = "none"
+	end
+	exec_map_func(mobj, player, stages, sn)
+	return mobj
+end
+
+function exec_map_func(mobj, player, stages, sn)
+	local mf = map_func[mobj]
+	if mf then
+		mf(player, stages, sn)
 	end
 end
