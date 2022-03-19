@@ -15,24 +15,8 @@ stage1 = {
     m_h = 16,
     -- enemies
     enemies = {
-        {
-            create=create_enemey_1,
-            sp=64,
-            sp_end=65,
-            x=8*8,
-            y=2*8,
-            vx=0.5,
-            hp=6,
-        },
-        {
-            create=create_enemey_1,
-            sp=80,
-            sp_end=81,
-            x=9*8,
-            y=12*8,
-            vx=-0.7,
-            hp=3,
-        },
+        create_enemey_yellow(8*8, 2*8, 0.5),
+        create_enemey_dog(9*8, 12*8, -0.7),
     },
 }
 
@@ -48,41 +32,8 @@ stage2 = {
     m_h = 16,
     -- enemies
     enemies = {
-        {
-            create=create_enemey_1,
-            sp=64,
-            sp_end=65,
-            x=(24 - 16)*8,
-            y=3*8,
-            vx=0.5,
-            hp=6,
-        },
-        {
-            create=create_enemey_1,
-            sp=64,
-            sp_end=65,
-            x=(27 - 16) * 8,
-            y=10*8,
-            vx=0.5,
-            hp=6,
-        },
-        -- {
-        --     create=create_enemey_1,
-        --     sp=80,
-        --     sp_end=81,
-        --     x=(28 - 16) * 8,
-        --     y=3*8,
-        --     vx=-0.7,
-        --     hp=3,
-        -- },
-        {
-            create=create_enemey_1,
-            sp=80,
-            sp_end=81,
-            x=(20 - 16) * 8,
-            y=7*8,
-            vx=-0.7,
-            hp=3,
-        },
+        create_enemey_yellow((24 - 16)*8, 3*8, 0.5),
+        create_enemey_yellow((27 - 16)*8, 10*8, 0.5),
+        create_enemey_dog((20 - 16)*8, 7*8, -0.7),
     },
 }

@@ -1,40 +1,38 @@
-function init_enemies(es)
-	local enemies = {}
-	for e in all(es) do
-		add(enemies, e.create(e.sp, e.sp_end, e.x, e.y, e.vx, e.hp))
-	end
-	-- add(enemies, create_enemey_1(64, 65, 8 * 8, 2 * 8, 0.5, 6))
-	-- add(enemies, create_enemey_1(80, 81, 9 * 8, 12 * 8, -0.7, 3))
-	return enemies
+function create_enemey_yellow(init_x, init_y, init_vx)
+	return create_enemy(64, 65, init_x, init_y, init_vx, 6, update_enemy_1, animate_enemy_1)
 end
 
-function create_enemey_1(init_sp, init_sp_end, init_x, init_y, init_vx, init_hp)
+function create_enemey_dog(init_x, init_y, init_vx)
+	return create_enemy(80, 81, init_x, init_y, init_vx, 3, update_enemy_1, animate_enemy_1)
+end
+
+function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_hp, u_func, a_func)
 	local flip = false
-	if init_vx < 0 then
+	if i_vx < 0 then
 		flip = true
 	end
 	return {
-		sp=init_sp,
-		sp_begin=init_sp,
-		sp_end=init_sp_end,
+		sp=i_sp,
+		sp_begin=i_sp,
+		sp_end=i_sp_end,
 		spw=1,				-- sprite width
 		w=8,
 		h=8,
-		x=init_x,
-		y=init_y,
-		vx=init_vx,
+		x=i_x,
+		y=i_y,
+		vx=i_vx,
 		flip=flip,
 		-- status
 		downt=0,
 		downt_max=10,
 		dead=false,
-		hp=init_hp,
+		hp=i_hp,
 		underatk=false,		-- under attack flag
 		-- anim
 		anim=0,
 		-- function
-		update=update_enemy_1,
-		animate=animate_enemy_1,
+		update=u_func,
+		animate=a_func,
 	}
 end
 

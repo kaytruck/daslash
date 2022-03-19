@@ -40,7 +40,8 @@ function init_stage()
 	player.x = stages[sn].p_x
 	player.y = stages[sn].p_y
 	-- enemies
-	enemies = init_enemies(stages[sn].enemies)
+	-- enemies = init_enemies(stages[sn].enemies)
+	enemies = stages[sn].enemies
 	-- life time
 	life_time = stages[sn].life_time
 end
