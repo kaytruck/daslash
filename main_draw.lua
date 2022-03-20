@@ -55,6 +55,10 @@ function draw_gaming()
 	if not player.hiding then
 		draw_player(player)
 	end
+	-- draw explosion
+	for pnts in all(dmg_pnts) do
+		spr(18, pnts[1], pnts[2])
+	end
 	
 	-- debug print
 	debug_print()

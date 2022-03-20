@@ -1,11 +1,11 @@
 -- init
 function _init()
-	init()
+	init_game()
 	_update = update_title
 	_draw = draw_title
 end
 
-function init()
+function init_game()
 	-- settings
 	dead_h = 130
 	gravity=0.2
@@ -14,6 +14,7 @@ function init()
 	time_cnt = 0
 	score = 0
 	map_func = {}
+	dmg_pnts = {}
 	-- window limits
 	window_l = 0
 	window_r = 128

@@ -227,6 +227,7 @@ function engage(p, enemies)
                 enemy.hp = enemy.hp - p.atk
 				enemy.underatk = true
 				enemy.downt = enemy.downt_max
+				add(dmg_pnts, {enemy.x, enemy.y})
 			end
 		else
 			-- player damage
@@ -251,13 +252,17 @@ end
 function animate_player(player)
 	player.spw = 1
 	if player.hiding then
+		-- hiding
 		player.sp = 17
 	elseif player.dash_time > 0 then
+		-- dash
 		player.sp = 33
 		player.spw = 2
 	elseif player.falling then
+		-- falling
 		player.sp = 7
 	elseif player.running then
+		-- running
 		if time() - player.anim > 0.1 then
 			player.anim = time()
             player.sp = player.sp + 1
@@ -268,6 +273,7 @@ function animate_player(player)
 	elseif (player.chk_ladder == "in"
 	or player.chk_ladder == "bottom")
 	and player.vy ~= 0 then
+		-- ladder
 		if time() - player.anim > 0.1 then
 			player.anim = time()
 			if player.sp == 8 then

@@ -15,6 +15,8 @@ function update_gaming()
 	and life_time > 0 then
 		life_time = life_time - 1
 	end
+	-- clear explosion points
+	dmg_pnts = {}
 
 	update_player(player, enemies)
 	update_enemies(enemies)
@@ -53,7 +55,7 @@ function update_gameover()
 		-- blink start message
 		blink()
 		if btnp(5) then
-			init()
+			init_game()
 			_update = update_title
 			_draw = draw_title
 		end
