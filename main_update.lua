@@ -39,13 +39,17 @@ function update_gaming()
 	elseif player.hp == 0
 	or life_time == 0 then
 		-- game over
-		shake_intensity = shake_intensity_max
+		shake_intensity = shake_intensity_gameover
 		_update = update_gameover
 		_draw = draw_gameover
 	end
 	
 	animate_player(player)
 	animate_enemies(enemies)
+
+	if shake_intensity > 0 then
+		shake()
+	end
 end
 
 function update_gameover()

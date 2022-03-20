@@ -26,7 +26,8 @@ function init_game()
 	blink_cnt = 0
 	-- gameover screen
 	shake_intensity = 0
-	shake_intensity_max = 6
+	shake_intensity_gameover = 6
+	shake_intensity_hit = 1
 	-- player
 	player = create_player()
 	-- stage

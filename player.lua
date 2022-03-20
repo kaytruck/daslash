@@ -203,7 +203,6 @@ function hiding(p)
 end
 
 function engage(p, enemies)
-	local deads = {}
 	for enemy in all(enemies) do
 		-- if not collide on y
 		if not (max(p.y, enemy.y) <= min(p.y + p.h - 1, enemy.y + enemy.h - 1))
@@ -235,17 +234,15 @@ function engage(p, enemies)
 			and not p.underatk
 			and p.cool_time == 0
 			and enemy.downt == 0 then
-                p.hp = p.hp - 1
+				p.hp = p.hp - 1
 				p.underatk = true
+				shake_intensity = shake_intensity_hit
 			end
 		end
 		if enemy.hp <= 0 then
-			add(deads, enemy)
+			del(enemies, enemy)
 		end
 		::nextenemy::
-	end
-	for dead in all(deads) do
-		del(enemies, dead)
 	end
 end
 
