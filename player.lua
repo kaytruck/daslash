@@ -227,7 +227,7 @@ function engage(p, enemies)
                 enemy.hp = enemy.hp - p.atk
 				enemy.underatk = true
 				enemy.downt = enemy.downt_max
-				add(dmg_pnts, {enemy.x, enemy.y})
+				add(explode_pnts, {enemy.x, enemy.y, explode_time})
 			end
 		else
 			-- player damage

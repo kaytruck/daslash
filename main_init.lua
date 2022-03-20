@@ -9,12 +9,13 @@ function init_game()
 	-- settings
 	dead_h = 130
 	gravity=0.2
+	explode_time = 4
 	-- gaming info
 	cur_mapobj = "none"
 	time_cnt = 0
 	score = 0
 	map_func = {}
-	dmg_pnts = {}
+	explode_pnts = {}
 	-- window limits
 	window_l = 0
 	window_r = 128

@@ -56,8 +56,12 @@ function draw_gaming()
 		draw_player(player)
 	end
 	-- draw explosion
-	for pnts in all(dmg_pnts) do
+	for pnts in all(explode_pnts) do
 		spr(18, pnts[1], pnts[2])
+		pnts[3] = pnts[3] - 1
+		if pnts[3] == 0 then
+			del(explode_pnts, pnts)
+		end
 	end
 	
 	-- debug print

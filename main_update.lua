@@ -16,7 +16,7 @@ function update_gaming()
 		life_time = life_time - 1
 	end
 	-- clear explosion points
-	dmg_pnts = {}
+	-- explode_pnts = {}
 
 	update_player(player, enemies)
 	update_enemies(enemies)
