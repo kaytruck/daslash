@@ -22,10 +22,10 @@ function update_gaming()
 	-- check stage finish
 	if #enemies == 0
 	and cur_mapobj == "door" then
+		score = score + life_time
 		if player.hp > 0 
 		and sn < #stages then
 			-- goto next stage
-			score = score + life_time
 			sn = sn + 1
 			init_stage()
 		else
