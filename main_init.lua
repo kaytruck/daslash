@@ -36,6 +36,9 @@ function init_game()
 	init_stage()
 	-- items
 	init_item()
+
+	-- music begin
+	music(0)
 end
 
 function init_stage()
