@@ -1,12 +1,30 @@
 function create_enemey_yellow(init_x, init_y, init_vx)
-	return create_enemy(64, 65, init_x, init_y, init_vx, 6, update_enemy_1, animate_enemy_1)
+	local yellow = create_enemy(64, 65, init_x, init_y, init_vx, 6,
+		update_enemy_yellow,
+		animate_enemy_1,
+		function(self)
+			spr(self.sp, self.x, self.y, 1, 1, self.flip)
+			for shot in all(self.shots) do
+				circfill(shot.x, shot.y, 1, 10)
+			end
+		end
+	)
+	yellow["shots"] = {}
+	yellow["shots_max"] = 3
+	return yellow
 end
 
 function create_enemey_dog(init_x, init_y, init_vx)
-	return create_enemy(80, 81, init_x, init_y, init_vx, 3, update_enemy_1, animate_enemy_1)
+	return create_enemy(80, 81, init_x, init_y, init_vx, 3,
+		update_enemy_dog,
+		animate_enemy_1,
+		function(self)
+			spr(self.sp, self.x, self.y, 1, 1, self.flip)
+		end
+	)
 end
 
-function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_hp, u_func, a_func)
+function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_hp, u_func, a_func, d_func)
 	local flip = false
 	if i_vx < 0 then
 		flip = true
@@ -31,8 +49,9 @@ function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_hp, u_func, a_func)
 		-- anim
 		anim=0,
 		-- function
-		update=u_func,
-		animate=a_func,
+		update = u_func,
+		animate = a_func,
+		draw = d_func,
 	}
 end
 
@@ -42,7 +61,50 @@ function update_enemies(enemies)
 	end
 end
 
-function update_enemy_1(self)
+function update_enemy_yellow(self)
+	-- add shot
+	if rnd(1) < 0.025
+	and #self.shots < self.shots_max then
+		local x = self.x
+		local vx = -2
+		if not self.flip then
+			x = x + self.w
+			vx = -vx
+		end
+		add(self.shots, {
+			x = x,
+			y = self.y + 4,
+			vx = vx,
+			dmg = 1,
+		})
+	end 
+	-- shot move
+	for s in all(self.shots) do
+		s.x = s.x + s.vx
+		-- engage player
+		if s.x > player.x
+		and s.x < player.x + player.w
+		and s.y > player.y
+		and s.y < player.y + player.h then
+			player:dmg(s.dmg)
+			del(self.shots, s)
+			goto next_shot
+		end
+		-- delete on frame out
+		if s.x < 0 or s.x > 127 then
+			del(self.shots, s)
+		end
+		::next_shot::
+	end
+	-- move
+	enemy_move_1(self)
+end
+
+function update_enemy_dog(self)
+	enemy_move_1(self)
+end
+
+function enemy_move_1(self)
 	if self.downt > 0 then
 		self.downt = self.downt - 1
 	end
@@ -82,8 +144,6 @@ end
 
 function draw_enemies(enemies)
 	for enemy in all(enemies) do
-		if enemy.hp > 0 then
-			spr(enemy.sp, enemy.x, enemy.y, 1, 1, enemy.flip)
-		end
+		enemy:draw()
 	end
 end

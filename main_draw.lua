@@ -5,11 +5,10 @@ function draw_title()
 	spr(192, 48, 25, 4, 4)
 	print("dash from behind, and slash!", 8, 62, 3)
 	print("press ❎ to start", 32, 82, blink_col)
-	print("🅾️ hiding -- no damage", 16, 96, 6)
+	print("🅾️ hiding - no damage", 16, 96, 6)
 	print("❎ dash and slash", 16,104,6)
 	print("0.1", 2, 120, 13)
 	print("by kaytruck", 82, 120, 6)
-	
 end
 
 function draw_gaming()
@@ -55,14 +54,6 @@ function draw_gaming()
 	if not player.hiding then
 		draw_player(player)
 	end
-	-- draw explosion
-	for pnts in all(explode_pnts) do
-		spr(18, pnts[1], pnts[2])
-		pnts[3] = pnts[3] - 1
-		if pnts[3] == 0 then
-			del(explode_pnts, pnts)
-		end
-	end
 	
 	-- debug print
 	debug_print()
@@ -103,4 +94,5 @@ function debug_print()
 	-- print("enemies[1].downt:"..enemies[1].downt, 0, 18, 3)
 	-- print("stages[sn].life_time:"..s	tages[sn].life_time, 0, 18, 3)
 	-- print("shake_intensity:"..shake_intensity, 0, 18, 3)
+	-- print("enemies[1].shot_max"..enemies[1].shot_max, 0, 18, 3)
 end

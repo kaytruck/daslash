@@ -16,6 +16,7 @@ function init_game()
 	score = 0
 	map_func = {}
 	explode_pnts = {}
+	-- shots = {}
 	-- window limits
 	window_l = 0
 	window_r = 128

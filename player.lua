@@ -38,6 +38,8 @@ function create_player()
 		ladder="none",
 		-- anim
 		anim=0,
+		-- function
+		dmg=player_dmg,
 	}
 end
 
@@ -210,7 +212,6 @@ function engage(p, enemies)
 			goto nextenemy
 		end
 		-- if not collide on x
-		-- TODO should compare to center and center ?
 		if not (max(p.x, enemy.x) <= min(p.x + p.w - 1, enemy.x + enemy.w - 1))
 		and not (min(p.x + p.w - 1, enemy.x + enemy.w - 1) >= max(p.x, enemy.x)) then
 			p.underatk = false
@@ -234,7 +235,7 @@ function engage(p, enemies)
 			and not p.underatk
 			and p.cool_time == 0
 			and enemy.downt == 0 then
-				p.hp = p.hp - 1
+				p:dmg(1)
 				p.underatk = true
 				shake_intensity = shake_intensity_hit
 			end
@@ -284,7 +285,10 @@ function animate_player(player)
 	end
 end
 
+function player_dmg(self, d)
+	self.hp = self.hp - d
+end
+
 function draw_player(player)
 	spr(player.sp, player.x, player.y, player.spw, 1, player.flip)
 end
-
