@@ -226,6 +226,7 @@ function engage(p, enemies)
 			--  if same direction
 			if p.flip == enemy.flip
 			and not enemy.underatk then
+			-- if not enemy.underatk then
 				-- if dash through
                 enemy.hp = enemy.hp - p.atk
 				enemy.underatk = true
