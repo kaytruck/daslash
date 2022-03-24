@@ -10,6 +10,7 @@ function init_game()
 	dead_h = 130
 	gravity=0.2
 	explode_time = 4
+	debug = false
 	-- gaming info
 	cur_mapobj = "none"
 	time_cnt = 0

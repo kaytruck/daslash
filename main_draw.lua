@@ -104,4 +104,5 @@ function debug_print()
 	-- print("stages[sn].life_time:"..s	tages[sn].life_time, 0, 18, 3)
 	-- print("shake_intensity:"..shake_intensity, 0, 18, 3)
 	-- print("enemies[1].shot_max"..enemies[1].shot_max, 0, 18, 3)
+	-- print("debug:"..(debug and "true" or "false"), 0, 18, 3)
 end

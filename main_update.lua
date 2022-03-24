@@ -3,6 +3,10 @@ function update_title()
 	if btnp(5) then
 		_update = update_gaming
 		_draw = draw_gaming
+	elseif btnp(4) then
+		debug = true
+		_update = update_gaming
+		_draw = draw_gaming
 	end
 	-- blink start message
 	blink()
@@ -41,6 +45,16 @@ function update_gaming()
 		shake_intensity = shake_intensity_gameover
 		_update = update_gameover
 		_draw = draw_gameover
+	elseif cur_mapobj == "door" 
+	and debug then
+		if stage.next ~= nil then
+			-- goto next stage
+			stage = init_stage(stage.next())
+		else
+			-- cleard
+			_update = update_gameover
+			_draw = draw_gameover
+		end
 	end
 	
 	player:animate()
