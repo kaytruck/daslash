@@ -90,6 +90,9 @@ function draw_map()
 end
 
 function debug_print()
+	if debug then
+		print("debug mode", 0, 12, 3)
+	end
 	-- print("player.vx:"..player.vx, 3)
 	-- print("player.vy:"..player.vy, 3)
 	-- print("player.x:"..player.x, 0, 18, 3)
