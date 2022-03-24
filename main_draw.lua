@@ -16,8 +16,8 @@ function draw_gaming()
 	draw_map()
 	-- draw info area background
 	rectfill(0, 0, 127, 10, 0)
-	-- draw stage num
-	print(""..sn.."/"..#stages, 2, 3, 9)
+	-- TODO draw stage num
+	-- print(""..sn.."/"..#stages, 2, 3, 9)
 	-- draw player hp
 	for i=0, player.hpmax - 1 do
 		spr(49, 25 + 8 * i, 3)
@@ -27,7 +27,7 @@ function draw_gaming()
 	end
 	-- draw life time
 	local life_time_c = 15
-	if life_time / stages[sn].life_time < 0.2 then
+	if life_time / stage.life_time < 0.2 then
 		life_time_c = 8
 	end
 	local life_time_s = "0"..life_time
@@ -65,7 +65,7 @@ function draw_gameover()
 	else
 		cls(1)
 		local msg = "you died"
-		if #stages == sn
+		if stage.next == nil
 		and player.hp > 0 then
 			msg = "cleard"
 		end
@@ -77,7 +77,7 @@ function draw_gameover()
 end
 
 function draw_map()
-	map(stages[sn].m_x, stages[sn].m_y, 0, 0, stages[sn].m_w, stages[sn].m_w)
+	map(stage.m_x, stage.m_y, 0, 0, stage.m_w, stage.m_w)
 end
 
 function debug_print()

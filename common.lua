@@ -1,3 +1,4 @@
+-- sprite flags
 f_solid = 0xF
 f_ground = 0x4
 f_ladder = 0x14
@@ -24,10 +25,10 @@ function collide_wall(obj, dir)
 	end
 
 	-- pixel to tile
-    x1 = x1 / 8 + stages[sn].m_x
-    y1 = y1 / 8 + stages[sn].m_y
-    x2 = x2 / 8 + stages[sn].m_x
-    y2 = y2 / 8 + stages[sn].m_y
+    x1 = x1 / 8 + stage.m_x
+    y1 = y1 / 8 + stage.m_y
+    x2 = x2 / 8 + stage.m_x
+    y2 = y2 / 8 + stage.m_y
 
 	if fget(mget(x1, y1)) == f_solid
 	or fget(mget(x2, y2)) == f_solid
@@ -46,10 +47,10 @@ function collide_ground(obj, offset)
 	local x2 = obj.x + obj.w - 3
 	local y2 = (obj.y + obj.h - 1) + offset
 
-	x1 = x1 / 8 + stages[sn].m_x
-	y1 = y1 / 8 + stages[sn].m_y
-	x2 = x2 / 8 + stages[sn].m_x
-	y2 = y2 / 8 + stages[sn].m_y
+	x1 = x1 / 8 + stage.m_x
+	y1 = y1 / 8 + stage.m_y
+	x2 = x2 / 8 + stage.m_x
+	y2 = y2 / 8 + stage.m_y
 
 	if (fget(mget(x1, y1)) & f_ground) ~= 0
 	or (fget(mget(x2, y2)) & f_ground) ~= 0
@@ -71,12 +72,12 @@ function chk_ladder(obj)
 	local x2_r = obj.x + obj.w -3
 	local y2 = (obj.y + obj.h)
 
-	x1_l = x1_l / 8 + stages[sn].m_x
-	x1_r = x1_r / 8 + stages[sn].m_x
-	y1 = y1 / 8 + stages[sn].m_y
-	x2_l = x2_l / 8 + stages[sn].m_x
-	x2_r = x2_r / 8 + stages[sn].m_x
-	y2 = y2 / 8 + stages[sn].m_y
+	x1_l = x1_l / 8 + stage.m_x
+	x1_r = x1_r / 8 + stage.m_x
+	y1 = y1 / 8 + stage.m_y
+	x2_l = x2_l / 8 + stage.m_x
+	x2_r = x2_r / 8 + stage.m_x
+	y2 = y2 / 8 + stage.m_y
 
     if fget(mget(x1_l, y1)) == f_ladder 
 	or fget(mget(x1_r, y1)) == f_ladder then
@@ -96,7 +97,7 @@ end
 function chk_mapobj(player)
 	local x = player.x + player.w / 2
 	local y = player.y + player.h / 2
-	local f = fget(mget(x/8 + stages[sn].m_x, y/8 + stages[sn].m_y))
+	local f = fget(mget(x/8 + stage.m_x, y/8 + stage.m_y))
 
 	local mobj = "none"
 	if f == f_door then
@@ -108,13 +109,13 @@ function chk_mapobj(player)
 	else
 		mobj = "none"
 	end
-	exec_map_func(mobj, player, stages, sn)
+	exec_map_func(mobj, player, stage)
 	return mobj
 end
 
-function exec_map_func(mobj, player, stages, sn)
+function exec_map_func(mobj, player, stage)
 	local mf = map_func[mobj]
 	if mf then
-		mf(player, stages, sn)
+		mf(player, stage)
 	end
 end

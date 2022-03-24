@@ -15,10 +15,10 @@ function update_gaming()
 	and life_time > 0 then
 		life_time = life_time - 1
 	end
-	-- clear explosion points
-	-- explode_pnts = {}
 
+	-- update player
 	update_player(player, enemies)
+	-- update enemies
 	update_enemies(enemies)
 
 	-- check stage finish
@@ -26,10 +26,9 @@ function update_gaming()
 	and cur_mapobj == "door" then
 		score = score + life_time
 		if player.hp > 0 
-		and sn < #stages then
+		and stage.next ~= nil then
 			-- goto next stage
-			sn = sn + 1
-			init_stage()
+			stage = init_stage(stage.next())
 		else
 			-- cleard
 			_update = update_gameover

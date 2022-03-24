@@ -32,24 +32,23 @@ function init_game()
 	-- player
 	player = create_player()
 	-- stage
-	stages = load_stages()
-	sn = 1	-- stange number
-	init_stage()
+	stage = init_stage(create_stage_1())
 	-- items
-	init_item()
+	init_item(map_func)
 
 	-- music begin
 	music(0)
 end
 
-function init_stage()
+function init_stage(stage)
 	-- player
-	player.x = stages[sn].p_x
-	player.y = stages[sn].p_y
+	player.x = stage.p_x
+	player.y = stage.p_y
 	-- enemies
-	-- enemies = init_enemies(stages[sn].enemies)
-	enemies = stages[sn].enemies
+	enemies = stage.enemies
 	-- life time
-	life_time = stages[sn].life_time
+	life_time = stage.life_time
+
+	return stage
 end
 
