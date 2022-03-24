@@ -55,6 +55,15 @@ function draw_gaming()
 		draw_player(player)
 	end
 	
+	-- draw explosion
+	for pnts in all(explode_pnts) do
+		spr(18, pnts.x, pnts.y)
+		pnts.explode_time = pnts.explode_time - 1
+		if pnts.explode_time == 0 then
+			del(explode_pnts, pnts)
+		end
+	end
+
 	-- debug print
 	debug_print()
 end
