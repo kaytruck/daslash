@@ -39,148 +39,151 @@ function create_player()
 		-- anim
 		anim=0,
 		-- function
+		update=update_player,
+		animate=animate_player,
+		draw=draw_player,
 		dmg=player_dmg,
 	}
 end
 
-function update_player(p, enemies)
+function update_player(self, enemies)
 	-- physics (friction and gravity)
-    p.vx = p.vx * p.fric
-	if p.dash_time > 0 then
-        p.dash_time = p.dash_time - 1
-		if p.dash_time == 0 then
-			p.cool_time = p.cool_time_max
+    self.vx = self.vx * self.fric
+	if self.dash_time > 0 then
+        self.dash_time = self.dash_time - 1
+		if self.dash_time == 0 then
+			self.cool_time = self.cool_time_max
 		end
 	else
-        p.vy = p.vy + gravity
+        self.vy = self.vy + gravity
 	end
-	if p.cool_time > 0 then
-		p.cool_time = p.cool_time - 1
+	if self.cool_time > 0 then
+		self.cool_time = self.cool_time - 1
 	end
 	-- running animation
-	if abs(p.vx) < 0.5 then
-		p.running = false
+	if abs(self.vx) < 0.5 then
+		self.running = false
 	end	
 	-- on ladder ? reset
-	p.ladder = "none"
+	self.ladder = "none"
 
 	-- control
 	if btn(4) then
-		p.hiding = true
+		self.hiding = true
 	else
-		p.hiding = false
+		self.hiding = false
 		if btn(0) then
-			p.flip = true
-			p.running = true
-            p.vx = p.vx - p.acc_walk
+			self.flip = true
+			self.running = true
+            self.vx = self.vx - self.acc_walk
 		end
 		if btn(1) then
-			p.flip = false
-			p.running = true
-            p.vx = p.vx + p.acc_walk
+			self.flip = false
+			self.running = true
+            self.vx = self.vx + self.acc_walk
 		end
 		if btn(2) then
-			p.ladder = "up"
+			self.ladder = "up"
 		end
 		if btn(3) then
-			p.ladder = "down"
+			self.ladder = "down"
 		end
 		if btnp(5)
-		and p.dash_time == 0 then
-			p.dash_time = p.dash_time_max
+		and self.dash_time == 0 then
+			self.dash_time = self.dash_time_max
 		end
 	end
 
 	-- hide
-	hiding(p)
+	hiding(self)
 
 	-- dash
-	if p.dash_time > 0 then
-		if p.flip then
-            p.vx = p.vx - p.acc_dash
+	if self.dash_time > 0 then
+		if self.flip then
+            self.vx = self.vx - self.acc_dash
 		else
-            p.vx = p.vx + p.acc_dash
+            self.vx = self.vx + self.acc_dash
 		end
-	elseif abs(p.vx) > p.max_vx then
+	elseif abs(self.vx) > self.max_vx then
 		-- limit speed x-axis
-		if p.vx > 0 then
-			p.vx = p.max_vx
+		if self.vx > 0 then
+			self.vx = self.max_vx
 		else
-			p.vx = -p.max_vx
+			self.vx = -self.max_vx
 		end
 	end
 
 	-- limit speed y-axis
-	p.vy = mid(-p.max_vy, p.vy, p.max_vy)
+	self.vy = mid(-self.max_vy, self.vy, self.max_vy)
 
 	-- falling
-	if p.vy > 0 and p.chk_ladder == "none" then
-		p.falling = true
-		p.landing = false
+	if self.vy > 0 and self.chk_ladder == "none" then
+		self.falling = true
+		self.landing = false
 	end
 
 	-- collide ground
-	for offset = 1, flr(p.vy + 0.9) do
-		local collide = collide_ground(p, offset)
+	for offset = 1, flr(self.vy + 0.9) do
+		local collide = collide_ground(self, offset)
 		if collide then
-			p.falling = false
-			p.landing = true
-			if p.vy > 0 then
-				p.vy = 0
+			self.falling = false
+			self.landing = true
+			if self.vy > 0 then
+				self.vy = 0
 			end
 			break
 		end
 	end
 	-- ladder
-	p.chk_ladder = chk_ladder(p)
-	if p.chk_ladder == "on" then
-		if p.ladder == "down" then
-			p.vy = 1
+	self.chk_ladder = chk_ladder(self)
+	if self.chk_ladder == "on" then
+		if self.ladder == "down" then
+			self.vy = 1
 		end
-	elseif p.chk_ladder == "in" then
-		if p.ladder == "up" then
-			p.vy = -1
+	elseif self.chk_ladder == "in" then
+		if self.ladder == "up" then
+			self.vy = -1
 		end
-		if p.ladder == "down" then
-			p.vy = 1
+		if self.ladder == "down" then
+			self.vy = 1
 		end
-	elseif p.chk_ladder == "bottom" then
-		if p.ladder == "up" then
-			p.vy = -1
+	elseif self.chk_ladder == "bottom" then
+		if self.ladder == "up" then
+			self.vy = -1
 		end
 	end
 
 	-- collide wall
-	if p.vx > 0
-	and collide_wall(p, "right") then
-		p.vx = 0
-        p.x = p.x - (p.x + p.w) % 8
-	elseif p.vx < 0
-	and collide_wall(p, "left") then
-		p.vx = 0
+	if self.vx > 0
+	and collide_wall(self, "right") then
+		self.vx = 0
+        self.x = self.x - (self.x + self.w) % 8
+	elseif self.vx < 0
+	and collide_wall(self, "left") then
+		self.vx = 0
 	end
 	
 	-- check map obj (goal, item, ...)
-	cur_mapobj = chk_mapobj(p)
+	cur_mapobj = chk_mapobj(self)
 	
 	-- collide enemies
-	engage(p, enemies)
+	engage(self, enemies)
 
 	-- apply move
-    p.x = p.x + p.vx
-    p.y = p.y + p.vy
-	p.y = flr(p.y + 0.9)
+    self.x = self.x + self.vx
+    self.y = self.y + self.vy
+	self.y = flr(self.y + 0.9)
 
 	-- limit player to window
-	if p.x < window_l then
-		p.x = window_l
-	elseif p.x > window_r - p.w then
-		p.x = window_r - p.w
+	if self.x < window_l then
+		self.x = window_l
+	elseif self.x > window_r - self.w then
+		self.x = window_r - self.w
 	end
 
 	-- check player die
 	if player.y > dead_h then
-		p.hp = 0
+		self.hp = 0
 	end
 end
 
@@ -247,41 +250,41 @@ function engage(p, enemies)
 	end
 end
 
-function animate_player(player)
-	player.spw = 1
-	if player.hiding then
+function animate_player(self)
+	self.spw = 1
+	if self.hiding then
 		-- hiding
-		player.sp = 17
-	elseif player.dash_time > 0 then
+		self.sp = 17
+	elseif self.dash_time > 0 then
 		-- dash
-		player.sp = 33
-		player.spw = 2
-	elseif player.falling then
+		self.sp = 33
+		self.spw = 2
+	elseif self.falling then
 		-- falling
-		player.sp = 7
-	elseif player.running then
+		self.sp = 7
+	elseif self.running then
 		-- running
-		if time() - player.anim > 0.1 then
-			player.anim = time()
-            player.sp = player.sp + 1
-			if player.sp > 6 then
-				player.sp = 2
+		if time() - self.anim > 0.1 then
+			self.anim = time()
+            self.sp = self.sp + 1
+			if self.sp > 6 then
+				self.sp = 2
 			end
 		end
-	elseif (player.chk_ladder == "in"
-	or player.chk_ladder == "bottom")
-	and player.vy ~= 0 then
+	elseif (self.chk_ladder == "in"
+	or self.chk_ladder == "bottom")
+	and self.vy ~= 0 then
 		-- ladder
-		if time() - player.anim > 0.1 then
-			player.anim = time()
-			if player.sp == 8 then
-				player.sp = 9
+		if time() - self.anim > 0.1 then
+			self.anim = time()
+			if self.sp == 8 then
+				self.sp = 9
 			else
-				player.sp = 8
+				self.sp = 8
 			end
 		end
 	else
-		player.sp = 1
+		self.sp = 1
 	end
 end
 
@@ -289,6 +292,6 @@ function player_dmg(self, d)
 	self.hp = self.hp - d
 end
 
-function draw_player(player)
-	spr(player.sp, player.x, player.y, player.spw, 1, player.flip)
+function draw_player(self)
+	spr(self.sp, self.x, self.y, self.spw, 1, self.flip)
 end

@@ -46,13 +46,13 @@ function draw_gaming()
 
 	-- draw player if hiding
 	if player.hiding then
-		draw_player(player)
+		player:draw()
 	end
 	-- draw enemies
 	draw_enemies(enemies)
 	-- draw player not hiding
 	if not player.hiding then
-		draw_player(player)
+		player:draw()
 	end
 	
 	-- draw explosion

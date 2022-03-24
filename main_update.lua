@@ -17,7 +17,7 @@ function update_gaming()
 	end
 
 	-- update player
-	update_player(player, enemies)
+	player:update(enemies)
 	-- update enemies
 	update_enemies(enemies)
 
@@ -43,7 +43,7 @@ function update_gaming()
 		_draw = draw_gameover
 	end
 	
-	animate_player(player)
+	player:animate()
 	animate_enemies(enemies)
 
 	if shake_intensity > 0 then
