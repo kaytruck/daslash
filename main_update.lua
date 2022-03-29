@@ -1,10 +1,12 @@
 -- update
 function update_title()
 	if btnp(5) then
+		stage = init_stage(create_stage_1())
 		_update = update_gaming
 		_draw = draw_gaming
 	elseif btnp(4) then
 		debug = true
+		stage = init_stage(create_stage_1())
 		_update = update_gaming
 		_draw = draw_gaming
 	end

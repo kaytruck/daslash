@@ -17,7 +17,6 @@ function init_game()
 	score = 0
 	map_func = {}
 	explode_pnts = {}
-	-- shots = {}
 	-- window limits
 	window_l = 0
 	window_r = 128
@@ -32,8 +31,8 @@ function init_game()
 	shake_intensity_hit = 1
 	-- player
 	player = create_player()
-	-- stage
-	stage = init_stage(create_stage_1())
+	-- enemies
+	enemies = {}
 	-- items
 	init_item(map_func)
 
@@ -46,7 +45,9 @@ function init_stage(stage)
 	player.x = stage.p_x
 	player.y = stage.p_y
 	-- enemies
-	enemies = stage.enemies
+	if not debug then
+		enemies = stage.enemies
+	end
 	-- life time
 	life_time = stage.life_time
 
