@@ -64,6 +64,9 @@ function draw_gaming()
 		end
 	end
 
+	-- stop shake
+	camera()
+
 	-- debug print
 	debug_print()
 end
