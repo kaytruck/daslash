@@ -46,21 +46,21 @@ function collide_wall2(obj)
 	local y2 = 0
 
 	if obj.vx == 0 then
-		return 0
+		return false
 	end
 
 	for i=1, flr(abs(obj.vx) + 0.9) do
 		if obj.vx > 0 then
 			-- right
-			x1 = obj.x + obj.w + i
+			x1 = obj.x + obj.w - 1 + i
 			y1 = obj.y
-			x2 = obj.x + obj.w + i
+			x2 = obj.x + obj.w - 1 + i
 			y2 = obj.y + obj.h - 1
 		else
 			-- left
-			x1 = obj.x - 1 - i
+			x1 = obj.x - i
 			y1 = obj.y
-			x2 = obj.x - 1 - i
+			x2 = obj.x - i
 			y2 = obj.y + obj.h - 1
 		end
 		-- pixel to tile
@@ -72,14 +72,10 @@ function collide_wall2(obj)
 		if fget(mget(x1, y1)) == f_solid
 		or fget(mget(x2, y2)) == f_solid
 		then
-			if obj.vx > 0 then
-				return -i
-			else
-				return i
-			end
+			return true
 		end
 	end
-	return 0
+	return false
 end
 
 function collide_ground2(obj)

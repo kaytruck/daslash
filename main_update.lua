@@ -5,7 +5,7 @@ function update_title()
 		_update = update_gaming
 		_draw = draw_gaming
 	elseif btnp(4) then
-		debug = true
+		debugmode = true
 		stage = init_stage(create_stage_1())
 		_update = update_gaming
 		_draw = draw_gaming
@@ -17,7 +17,8 @@ end
 function update_gaming()
 	-- life time count down
 	time_cnt = time_cnt + 1
-	if time_cnt % 30 == 1
+	if not debugmode
+	and time_cnt % 30 == 1
 	and life_time > 0 then
 		life_time = life_time - 1
 	end
@@ -48,7 +49,7 @@ function update_gaming()
 		_update = update_gameover
 		_draw = draw_gameover
 	elseif cur_mapobj == "door" 
-	and debug then
+	and debugmode then
 		if stage.next ~= nil then
 			-- goto next stage
 			stage = init_stage(stage.next())

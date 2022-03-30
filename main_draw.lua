@@ -93,7 +93,7 @@ function draw_map()
 end
 
 function debug_print()
-	if debug then
+	if debugmode then
 		print("debug mode", 0, 12, 3)
 	end
 	-- print("player.vx:"..player.vx, 0, 22,3)
@@ -111,5 +111,5 @@ function debug_print()
 	-- print("shake_intensity:"..shake_intensity, 0, 18, 3)
 	-- print("enemies[1].shot_max"..enemies[1].shot_max, 0, 18, 3)
 	-- print("debug:"..(debug and "true" or "false"), 0, 18, 3)
-	-- print("correction:"..correction, 0, 23, 3)
+	print("cx:"..cx, 0, 23, 3)
 end

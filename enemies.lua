@@ -110,15 +110,8 @@ function enemy_move_1(self)
 		self.downt = self.downt - 1
 	end
 	-- flip
-	-- local collide_ground = collide_ground(self, 1)
-	local collide_ground = collide_ground2(self)
-	local dir = "right"
-	if self.vx < 0 then
-		dir = "left"
-	end
-	local collide_wall = collide_wall(self, dir)
-	if not collide_ground 
-	or collide_wall then
+	if not collide_ground2(self) 
+	or collide_wall2(self) then
 		self.vx = self.vx * -1
 		self.flip = not self.flip
 	end

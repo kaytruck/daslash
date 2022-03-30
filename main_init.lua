@@ -10,7 +10,7 @@ function init_game()
 	dead_h = 130
 	gravity=0.2
 	explode_time = 4
-	debug = false
+	debugmode = false
 	-- gaming info
 	cur_mapobj = "none"
 	time_cnt = 0
@@ -31,7 +31,7 @@ function init_game()
 	shake_intensity_hit = 1
 	-- player
 	player = create_player()
-	correction = 0
+	cx = 0
 	-- enemies
 	enemies = {}
 	-- items
@@ -46,7 +46,7 @@ function init_stage(stage)
 	player.x = stage.p_x
 	player.y = stage.p_y
 	-- enemies
-	if not debug then
+	if not debugmode then
 		enemies = stage.enemies
 	end
 	-- life time

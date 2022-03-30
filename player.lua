@@ -152,12 +152,15 @@ function update_player(self, enemies)
 	end
 
 	-- collide wall
-	if self.vx > 0
-	and collide_wall(self, "right") then
-		self.vx = 0
-        self.x = self.x - (self.x + self.w) % 8
-	elseif self.vx < 0
-	and collide_wall(self, "left") then
+	-- if self.vx > 0
+	-- and collide_wall(self, "right") then
+	-- 	self.vx = 0
+    --     -- self.x = self.x - (self.x + self.w) % 8
+	-- elseif self.vx < 0
+	-- and collide_wall(self, "left") then
+	-- 	self.vx = 0
+	-- end
+	if collide_wall2(self) then
 		self.vx = 0
 	end
 	
