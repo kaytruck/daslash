@@ -123,17 +123,15 @@ function update_player(self, enemies)
 	end
 
 	-- collide ground
-	for offset = 1, flr(self.vy + 0.9) do
-		local collide = collide_ground(self, offset)
-		if collide then
-			self.falling = false
-			self.landing = true
-			if self.vy > 0 then
-				self.vy = 0
-			end
-			break
+	local collide = collide_ground2(self)
+	if collide then
+		self.falling = false
+		self.landing = true
+		if self.vy > 0 then
+			self.vy = 0
 		end
 	end
+
 	-- ladder
 	self.chk_ladder = chk_ladder(self)
 	if self.chk_ladder == "on" then

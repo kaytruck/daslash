@@ -11,8 +11,8 @@ function create_stage_1 ()
         m_h = 16,
         -- enemies
         enemies = {
-            create_enemey_yellow(8*8, 2*8, 0.5),
-            create_enemey_dog(9*8, 12*8, -0.7),
+            create_enemey_yellow(8*8, 2*8, 0.5, 1),
+            create_enemey_dog(9*8, 12*8, -0.7, 1),
         },
         -- next stage
         next = create_stage_2,
@@ -32,9 +32,9 @@ function create_stage_2()
         m_h = 16,
         -- enemies
         enemies = {
-            create_enemey_yellow((24 - 16)*8, 3*8, 0.5),
-            create_enemey_yellow((27 - 16)*8, 10*8, 0.5),
-            create_enemey_dog((20 - 16)*8, 7*8, -0.7),
+            create_enemey_yellow((24 - 16)*8, 3*8, 0.5, 1),
+            create_enemey_yellow((27 - 16)*8, 10*8, 0.5, 1),
+            create_enemey_dog((20 - 16)*8, 7*8, -0.7, 1),
         },
         -- next stage
         next = nil,

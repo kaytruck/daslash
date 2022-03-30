@@ -1,5 +1,5 @@
-function create_enemey_yellow(init_x, init_y, init_vx)
-	local yellow = create_enemy(64, 65, init_x, init_y, init_vx, 6,
+function create_enemey_yellow(init_x, init_y, init_vx, init_vy)
+	local yellow = create_enemy(64, 65, init_x, init_y, init_vx, init_vy, 6,
 		update_enemy_yellow,
 		animate_enemy_1,
 		function(self)
@@ -14,8 +14,8 @@ function create_enemey_yellow(init_x, init_y, init_vx)
 	return yellow
 end
 
-function create_enemey_dog(init_x, init_y, init_vx)
-	return create_enemy(80, 81, init_x, init_y, init_vx, 3,
+function create_enemey_dog(init_x, init_y, init_vx, init_vy)
+	return create_enemy(80, 81, init_x, init_y, init_vx, init_vy, 3,
 		update_enemy_dog,
 		animate_enemy_1,
 		function(self)
@@ -24,7 +24,7 @@ function create_enemey_dog(init_x, init_y, init_vx)
 	)
 end
 
-function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_hp, u_func, a_func, d_func)
+function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_vy, i_hp, u_func, a_func, d_func)
 	local flip = false
 	if i_vx < 0 then
 		flip = true
@@ -39,6 +39,7 @@ function create_enemy(i_sp, i_sp_end, i_x, i_y, i_vx, i_hp, u_func, a_func, d_fu
 		x=i_x,
 		y=i_y,
 		vx=i_vx,
+		vy=i_vy,
 		flip=flip,
 		-- status
 		downt=0,
@@ -109,7 +110,8 @@ function enemy_move_1(self)
 		self.downt = self.downt - 1
 	end
 	-- flip
-	local collide_ground = collide_ground(self, 1)
+	-- local collide_ground = collide_ground(self, 1)
+	local collide_ground = collide_ground2(self)
 	local dir = "right"
 	if self.vx < 0 then
 		dir = "left"

@@ -31,6 +31,7 @@ function init_game()
 	shake_intensity_hit = 1
 	-- player
 	player = create_player()
+	correction = 0
 	-- enemies
 	enemies = {}
 	-- items

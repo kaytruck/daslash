@@ -39,26 +39,70 @@ function collide_wall(obj, dir)
 	end
 end
 
-function collide_ground(obj, offset)
-	-- bottom left
-	local x1 = obj.x + 2
-	local y1 = (obj.y + obj.h - 1) + offset
-	-- bottom right
-	local x2 = obj.x + obj.w - 3
-	local y2 = (obj.y + obj.h - 1) + offset
+function collide_wall2(obj)
+	local x1 = 0
+	local y1 = 0
+	local x2 = 0
+	local y2 = 0
 
-	x1 = x1 / 8 + stage.m_x
-	y1 = y1 / 8 + stage.m_y
-	x2 = x2 / 8 + stage.m_x
-	y2 = y2 / 8 + stage.m_y
-
-	if (fget(mget(x1, y1)) & f_ground) ~= 0
-	or (fget(mget(x2, y2)) & f_ground) ~= 0
-	then
-		return true
-	else
-		return false
+	if obj.vx == 0 then
+		return 0
 	end
+
+	for i=1, flr(abs(obj.vx) + 0.9) do
+		if obj.vx > 0 then
+			-- right
+			x1 = obj.x + obj.w + i
+			y1 = obj.y
+			x2 = obj.x + obj.w + i
+			y2 = obj.y + obj.h - 1
+		else
+			-- left
+			x1 = obj.x - 1 - i
+			y1 = obj.y
+			x2 = obj.x - 1 - i
+			y2 = obj.y + obj.h - 1
+		end
+		-- pixel to tile
+		x1 = x1 / 8 + stage.m_x
+		y1 = y1 / 8 + stage.m_y
+		x2 = x2 / 8 + stage.m_x
+		y2 = y2 / 8 + stage.m_y
+
+		if fget(mget(x1, y1)) == f_solid
+		or fget(mget(x2, y2)) == f_solid
+		then
+			if obj.vx > 0 then
+				return -i
+			else
+				return i
+			end
+		end
+	end
+	return 0
+end
+
+function collide_ground2(obj)
+	for offset = 1, flr(abs(obj.vy) + 0.9) do
+		-- bottom left
+		local x1 = obj.x + 2
+		local y1 = (obj.y + obj.h - 1) + offset
+		-- bottom right
+		local x2 = obj.x + obj.w - 3
+		local y2 = (obj.y + obj.h - 1) + offset
+
+		x1 = x1 / 8 + stage.m_x
+		y1 = y1 / 8 + stage.m_y
+		x2 = x2 / 8 + stage.m_x
+		y2 = y2 / 8 + stage.m_y
+
+		if (fget(mget(x1, y1)) & f_ground) ~= 0
+		or (fget(mget(x2, y2)) & f_ground) ~= 0
+		then
+			return true
+		end
+	end
+	return false
 end
 
 function chk_ladder(obj)
